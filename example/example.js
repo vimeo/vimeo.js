@@ -28,27 +28,37 @@ try {
 // Here we have to build the vimeo library using the client_id, client_secret and an access token
 // For the request we make below (/channels) the access token can be a client access token instead of a user access token.
 var lib = new Vimeo(config.client_id, config.client_secret);
-lib.access_token = config.access_token;
 
-lib.request({
-	// This is the path for the videos contained within the staff picks channels
-    path : '/channels/staffpicks/videos',
-    // This adds the parameters to request page two, and 10 items per page
-    params : {
-    	page : 2,
-    	per_page : 10
-    }
-}, function (error, body, status_code, headers) {
-	if (error) {
-		console.log('error');
-		console.log(error);
-    } else {
-		console.log('body');
-		console.log(body);
-    }
+// Unauthenticated api requests must request an access token. You should not request a new access token for each request, you should request an access token once and use it over and over.
+lib.generateClientCredentials('public', function (err, access_token) {
+	if (err) {
+		throw err;
+	}
 
-	console.log('status code');
-	console.log(status_code);
-	console.log('headers');
-	console.log(headers);
-}); 
+	// Assign the access token to the library
+	lib.access_token = access_token.access_token;
+
+	// Make an API request
+	lib.request({
+		// This is the path for the videos contained within the staff picks channels
+	    path : '/channels/staffpicks/videos',
+	    // This adds the parameters to request page two, and 10 items per page
+	    params : {
+	    	page : 2,
+	    	per_page : 10
+	    }
+	}, function (error, body, status_code, headers) {
+		if (error) {
+			console.log('error');
+			console.log(error);
+	    } else {
+			console.log('body');
+			console.log(body);
+	    }
+
+		console.log('status code');
+		console.log(status_code);
+		console.log('headers');
+		console.log(headers);
+	});
+})
