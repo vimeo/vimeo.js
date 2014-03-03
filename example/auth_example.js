@@ -85,7 +85,7 @@ var server = http_module.createServer(function (request, response) {
 
 			response.setHeader('Content-Type', 'text/html');
 			response.write('Your command line is currently unauthenticated. Please ');
-			response.end('<a href="' + lib.buildAuthorizationEndpoint('http://localhost:8080/oauth_callback', ['public', 'private', 'edit', 'interact', 'upload'], 'abcdefg') + '">Link with Vimeo</a><br />' + JSON.stringify(url.query));
+			response.end('<a href="' + lib.buildAuthorizationEndpoint('http://localhost:8080/oauth_callback', ['public', 'private', 'edit', 'interact'], 'abcdefg') + '">Link with Vimeo</a><br />' + JSON.stringify(url.query));
 		}
 
 	} else {
@@ -95,7 +95,7 @@ var server = http_module.createServer(function (request, response) {
 			console.info('http request without access token');
 			response.setHeader('Content-Type', 'text/html');
 			response.write('Your command line is currently unauthenticated. Please ');
-			response.end('<a href="' + lib.buildAuthorizationEndpoint('http://localhost:8080/oauth_callback', ['public', 'private', 'edit', 'interact', 'upload'], 'abcdefg') + '">Link with Vimeo</a>');
+			response.end('<a href="' + lib.buildAuthorizationEndpoint('http://localhost:8080/oauth_callback', ['public', 'private', 'edit', 'interact'], 'abcdefg') + '">Link with Vimeo</a>');
 		} else {
 			// At this state (state_data.state has been set to "authorized" when we retrieved the access token)
 			// we can make authenticated api requests
