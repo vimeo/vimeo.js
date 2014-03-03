@@ -1,5 +1,5 @@
 {
-  "name": "vimeo.js",
+  "name": "vimeo-api",
   "version": "0.9.0",
   "description": "A node.js library for the new Vimeo api",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vimeo/vimeo.js.git"
+    "url": "https://github.com/vimeo/vimeo.js"
   },
   "keywords": [
     "vimeo"
