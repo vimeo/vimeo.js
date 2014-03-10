@@ -58,7 +58,7 @@ Unauthenticated api requests must request an access token. You should not reques
 
 2. Your user will need to access the authorization endpoint (either by cliking the link or through a redirect). On the authorization endpoint the user will have the option to deny your app any scopes you have requested. If they deny your app, they will be redirected back to your redirect_url with an ````error```` parameter.
 
-3. If the user accepts your app, they will be redirected back to your redirect_uri with a ````code```` parameter and a ````state```` parmaeter. You *must* ensure that the state parameter provided is identical to your original state parameter. If the state is valid, you can exchange the code for an access token.
+3. If the user accepts your app, they will be redirected back to your redirect_uri with a ````code```` parameter and a ````state```` parameter. You *must* ensure that the state parameter provided is identical to your original state parameter. If the state is valid, you can exchange the code for an access token.
 
         // code is accessed through the query component of the url. eg http://redirect.uri/callback?code=xyz
         // redirect_uri is the exact same redirect uri you used when creating your app, and building your authorization endpoint
