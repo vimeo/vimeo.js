@@ -14,4 +14,5 @@
  *   limitations under the License.
  */
 var vimeo_module = require('./lib/vimeo');
+module.exports.vimeo_module = vimeo_module;
 module.exports.Vimeo = vimeo_module.Vimeo;
