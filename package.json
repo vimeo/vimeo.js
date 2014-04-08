@@ -1,6 +1,6 @@
 {
   "name": "vimeo-api",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A node.js library for the new Vimeo api",
   "main": "index.js",
   "directories": {
