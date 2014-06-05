@@ -106,7 +106,7 @@ This function will be called once the upload process is complete
             // This is the path for the videos contained within the staff picks channels
             path : '/channels/staffpicks/videos',
             // This adds the parameters to request page two, and 10 items per page
-            params : {
+            query : {
                 page : 2,
                 per_page : 10
             }
