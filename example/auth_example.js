@@ -45,6 +45,9 @@ var state_data = {
 // If we already knew our access token, we can provide it as the third parameter
 var lib = new Vimeo(config.client_id, config.client_secret);
 
+var scopes = ['public', 'private', 'edit', 'interact'];
+var callback_url = 'http://localhost:8080/oauth_callback';
+
 // The authorization process requires the user to be redirected back to a webpage, so we can start up a simple http server here
 var server = http_module.createServer(function (request, response) {
 	var url = url_module.parse(request.url, true);
@@ -60,7 +63,7 @@ var server = http_module.createServer(function (request, response) {
 			// At this state (a request to /oauth_callback without an error parameter)
 			// the user has been redirected back to the app and you can exchange the "code" parameter for an access token
 			console.info('successful oauth callback request');
-			lib.accessToken(url.query.code, 'http://localhost:8080/oauth_callback', function (err, token) {
+			lib.accessToken(url.query.code, callback_url, function (err, token) {
 				if (err) {
 					return response.end("error\n" + err);
 				}
@@ -85,7 +88,7 @@ var server = http_module.createServer(function (request, response) {
 
 			response.setHeader('Content-Type', 'text/html');
 			response.write('Your command line is currently unauthenticated. Please ');
-			response.end('<a href="' + lib.buildAuthorizationEndpoint('http://localhost:8080/oauth_callback', ['public', 'private', 'edit', 'interact'], 'abcdefg') + '">Link with Vimeo</a><br />' + JSON.stringify(url.query));
+			response.end('<a href="' + lib.buildAuthorizationEndpoint(callback_url, scopes, 'abcdefg') + '">Link with Vimeo</a><br />' + JSON.stringify(url.query));
 		}
 
 	} else {
@@ -95,7 +98,7 @@ var server = http_module.createServer(function (request, response) {
 			console.info('http request without access token');
 			response.setHeader('Content-Type', 'text/html');
 			response.write('Your command line is currently unauthenticated. Please ');
-			response.end('<a href="' + lib.buildAuthorizationEndpoint('http://localhost:8080/oauth_callback', ['public', 'private', 'edit', 'interact'], 'abcdefg') + '">Link with Vimeo</a>');
+			response.end('<a href="' + lib.buildAuthorizationEndpoint(callback_url, scopes, 'abcdefg') + '">Link with Vimeo</a>');
 		} else {
 			// At this state (state_data.state has been set to "authorized" when we retrieved the access token)
 			// we can make authenticated api requests
