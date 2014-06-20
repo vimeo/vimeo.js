@@ -18,7 +18,8 @@
 
 
 /**
- * For this example to run properly you must create an api app at developer.vimeo.com/apps/new and set your callback url to http://localhost:8080/oauth_callback
+ * For this example to run properly you must create an api app at developer.vimeo.com/apps/new 
+ * and set your callback url to http://localhost:8080/oauth_callback
  * 
  */
 var vimeo_module = require('../index');
@@ -28,9 +29,11 @@ var util_module = require('util');
 try {
 	var config = require('./config.json');
 } catch (error) {
-	console.error('ERROR: For this example to run properly you must create an api app at developer.vimeo.com/apps/new and set your callback url to http://localhost:8080/oauth_callback');
-	console.error('ERROR: Once you have your app, make a copy of config.json.example named "config.json" and add your client id and client secret');
-	return;
+	console.error('ERROR: For this example to run properly you must create an api app at '
+        + 'developer.vimeo.com/apps/new and set your callback url to '
+        + 'http://localhost:8080/oauth_callback');
+	console.error('ERROR: Once you have your app, make a copy of config.json.example named '
+        + '"config.json" and add your client id and client secret');
 }
 
 var http_module = require('http');
@@ -48,12 +51,15 @@ var lib = new Vimeo(config.client_id, config.client_secret);
 var scopes = ['public', 'private', 'edit', 'interact'];
 var callback_url = 'http://localhost:8080/oauth_callback';
 
-// The authorization process requires the user to be redirected back to a webpage, so we can start up a simple http server here
+// The authorization process requires the user to be redirected back to a webpage, 
+// so we can start up a simple http server here
 var server = http_module.createServer(function (request, response) {
 	var url = url_module.parse(request.url, true);
 
-	// Once the user accepts your app, they will be redirected back to localhost:8080/oauth_callback.
-	// If they are not redirected you should check your apps configuration on developer.vimeo.com/apps
+	// Once the user accepts your app, they will be redirected back to 
+    // localhost:8080/oauth_callback.
+	// If they are not redirected you should check your apps configuration 
+    // on developer.vimeo.com/apps
 	if (url.pathname === '/oauth_callback') {
 		if (url.query.state !== 'abcdefg') {
 			throw new Error('invalid state');
@@ -61,7 +67,8 @@ var server = http_module.createServer(function (request, response) {
 
 		if (!url.query.error) {
 			// At this state (a request to /oauth_callback without an error parameter)
-			// the user has been redirected back to the app and you can exchange the "code" parameter for an access token
+			// the user has been redirected back to the app and you can exchange the 
+            // "code" parameter for an access token
 			console.info('successful oauth callback request');
 			lib.accessToken(url.query.code, callback_url, function (err, token) {
 				if (err) {
@@ -82,13 +89,15 @@ var server = http_module.createServer(function (request, response) {
 			});
 		} else {
 			// At this state (a request to /oauth_callback with an error parameter)
-			// something went wrong when you sent your user to Vimeo.com. The error parameter should tell you more
+			// something went wrong when you sent your user to Vimeo.com. 
+            // The error parameter should tell you more
 			console.error('failed oauth callback request');
 			console.error(url.query.error);
 
 			response.setHeader('Content-Type', 'text/html');
 			response.write('Your command line is currently unauthenticated. Please ');
-			response.end('<a href="' + lib.buildAuthorizationEndpoint(callback_url, scopes, 'abcdefg') + '">Link with Vimeo</a><br />' + JSON.stringify(url.query));
+			response.end('<a href="' + lib.buildAuthorizationEndpoint(callback_url, scopes,
+                'abcdefg') + '">Link with Vimeo</a><br />' + JSON.stringify(url.query));
 		}
 
 	} else {
@@ -98,13 +107,17 @@ var server = http_module.createServer(function (request, response) {
 			console.info('http request without access token');
 			response.setHeader('Content-Type', 'text/html');
 			response.write('Your command line is currently unauthenticated. Please ');
-			response.end('<a href="' + lib.buildAuthorizationEndpoint(callback_url, scopes, 'abcdefg') + '">Link with Vimeo</a>');
+			response.end('<a href="' + lib.buildAuthorizationEndpoint(callback_url, scopes,
+                'abcdefg') + '">Link with Vimeo</a>');
 		} else {
-			// At this state (state_data.state has been set to "authorized" when we retrieved the access token)
-			// we can make authenticated api requests
+			// At this state (state_data.state has been set to "authorized" when we retrieved 
+            // the access token) we can make authenticated api requests
 			console.info('http request with access token');
 			response.setHeader('Content-Type', 'text/html');
-			response.end('Your command line is currently authorized with the user : <a href="' + state_data.user.link + '">' + state_data.user.name + '</a>. You can make api requests via the command line using the "request" function, or upload files using the "upload" function.<br /> Try "request(\'/me\');"');
+			response.end('Your command line is currently authorized with the user : <a href="'
+                + state_data.user.link + '">' + state_data.user.name + '</a>. You can make api '
+                + 'requests via the command line using the "request" function, or upload files '
+                + 'using the "upload" function.<br /> Try "request(\'/me\');"');
 		}
 	}
 });
@@ -149,10 +162,13 @@ context.upload = function (path) {
  *
  * options.method is a string of the HTTP method for the request (GET, POST, PUT, PATCH, DELETE)
  * options.path is a string of the path portion of a url (eg. /users/dashron)
- * options.query is an object containing all of your request parameters. If GET they will be appended to the url, if POST it will be part of your request body
+ * options.query is an object containing all of your request parameters. If GET they will be 
+ * appended to the url, if POST it will be part of your request body
  * options.headers is an object containing key value pairings of all of the HTTP request headers
  * 
- * @param  {Object|String} options If string, it will make a GET request to that url. If an object, you can provide many parameters. See the function description for more.
+ * @param  {Object|String} options If string, it will make a GET request to that url. If an object, 
+ *                                 you can provide many parameters. See the function description 
+ *                                 for more.
  */
 context.request = function (options) {
 	if (typeof options === "string") {
