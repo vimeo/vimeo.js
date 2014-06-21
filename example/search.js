@@ -20,37 +20,18 @@ var Vimeo = require('../index').Vimeo;
 try {
     var config = require('./config.json');
 } catch (error) {
-    console.error('ERROR: For this example to run properly you must create an api app at developer.vimeo.com/apps/new and set your callback url to http://localhost:8080/oauth_callback');
-    console.error('ERROR: Once you have your app, make a copy of config.json.example named "config.json" and add your client id, client secret and access token');
-    return;
+    console.error('ERROR: For this example to run properly you must create an api app at '
+        + 'developer.vimeo.com/apps/new and set your callback url to '
+        + 'http://localhost:8080/oauth_callback');
+    console.error('ERROR: Once you have your app, make a copy of config.json.example named '
+        + '"config.json" and add your client id, client secret and access token');
 }
-
-// Here we have to build the vimeo library using the client_id, client_secret and an access token
-// For the request we make below (/channels) the access token can be a client access token instead of a user access token.
-var lib = new Vimeo(config.client_id, config.client_secret);
-
-if (config.access_token) {
-    lib.access_token = config.access_token;
-    makeRequest(lib);
-} else {
-    // Unauthenticated api requests must request an access token. You should not request a new access token for each request, you should request an access token once and use it over and over.
-    lib.generateClientCredentials('public', function (err, access_token) {
-        if (err) {
-            throw err;
-        }
-
-        // Assign the access token to the library
-        lib.access_token = access_token.access_token;
-        makeRequest(lib);
-        
-    });
-}
-
 
 function makeRequest(lib) {
     // Make an API request
     lib.request({
-        // This is the path for the videos contained within the staff picks channels
+        // This returns page 2 results for all videos containing myquery, sorted by 
+        // relevancy, ascending direction, using the CC filter with 10 items on the page
         path : '/videos',
         query : {
             page : 2,
@@ -58,7 +39,7 @@ function makeRequest(lib) {
             query : 'myquery',
             sort : 'relevant',
             direction : 'asc',
-            filter : 'CC',
+            filter : 'CC'
         }
     }, function (error, body, status_code, headers) {
         if (error) {
@@ -73,5 +54,28 @@ function makeRequest(lib) {
         console.log(status_code);
         console.log('headers');
         console.log(headers);
+    });
+}
+
+// Here we have to build the vimeo library using the client_id, client_secret and an access token
+// For the request we make below (/channels) the access token can be a client access token 
+// instead of a user access token.
+var lib = new Vimeo(config.client_id, config.client_secret);
+
+if (config.access_token) {
+    lib.access_token = config.access_token;
+    makeRequest(lib);
+} else {
+    // Unauthenticated api requests must request an access token. You should not request a new 
+    // access token for each request, you should request an access token once and use it over 
+    // and over.
+    lib.generateClientCredentials('public', function (err, access_token) {
+        if (err) {
+            throw err;
+        }
+
+        // Assign the access token to the library
+        lib.access_token = access_token.access_token;
+        makeRequest(lib);
     });
 }
