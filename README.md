@@ -124,3 +124,18 @@ This function will be called once the upload process is complete
             console.log('headers');
             console.log(headers);
         });
+
+
+## Upload Videos
+The API library has a ````upload```` method which takes three parameters.
+
+Name      | Type     | Description
+----------|----------|------------
+file      | string   | Full path to the upload file on the local system
+video_uri | string   | (Optional) Uri of an existing video. If provided, the uploaded video will replace the source file of this video.
+callback  | function | A callback that will be executed when the upload is comple, or has failed. It will be provided two parameters. Error, and data. If error is provided you should handle it (TODO: DOCUMENT ALL ERRORS). If error is not provided, the response will contain information about the newly uploaded video.
+
+
+    lib.upload('/home/aaron/Downloads/ada.mp4', function (video) {
+        lib.request(video);
+    });

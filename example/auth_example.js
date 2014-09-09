@@ -119,9 +119,10 @@ var context = require('repl').start({}).context;
  * This will upload the video to the authenticated account.
  * 
  * @param  {string} path The path to the video file
+ * @param  {string} video_uri Optional. If provided, this upload will replace the source file of the video uri provided
  */
-context.upload = function (path) {
-	lib.streamingUpload(path, function (err, data, status, headers) {
+context.upload = function (path, video_uri) {
+	lib.streamingUpload(path, video_uri, function (err, data, status, headers) {
 		if (err) {
 			console.log('---upload error---');
 			console.log('error');
