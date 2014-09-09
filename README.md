@@ -156,6 +156,7 @@ video_uri | string   | (Optional) Uri of an existing video. If provided, the upl
 callback  | function | A callback that will be executed when the upload is comple, or has failed. It will match the callback of an [API request](#callback).
 
 **Upload**
+
     lib.upload('/home/aaron/Downloads/ada.mp4',  function (error, body, status_code, headers) {
         if (err) {
             return throw err;
@@ -167,6 +168,7 @@ callback  | function | A callback that will be executed when the upload is compl
     });
 
 **Replace**
+
     lib.upload('/home/aaron/Downloads/ada.mp4', '/videos/12345',  function (error, body, status_code, headers) {
         if (err) {
             return throw err;
