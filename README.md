@@ -88,18 +88,24 @@ The API library has a ````request```` method which takes two parameters
 ### Options
 This object contains your request information in key value pairs
 
- - method - The HTTP method (e.g.: GET)
- - path - The URL path (e.g.: /users/dashron)
- - query - An object containing all of your parameters (e.g.: { "per_page": 5, "filter" : "featured"} )
- - headers - An object containing all additional headers (e.g.: { "If-Modified-Since" : "Mon, 03 Mar 2014 16:29:37 -0500" }
+Name        | Type     | Description
+------------|----------|------------
+ method     | string   | The HTTP method (e.g.: GET)
+ path       | string   | The URL path (e.g.: /users/dashron)
+ query      | string   | An object containing all of your parameters (e.g.: { "per_page": 5, "filter" : "featured"} )
+ headers    | object   | An object containing all additional headers (e.g.: { "If-Modified-Since" : "Mon, 03 Mar 2014 16:29:37 -0500" }
 
 
 ### Callback
 This function will be called once the upload process is complete
- - error - If this is provided, it means the request failed. The other parameters may, or may not contain additional information. You should check the status code to understand exactly what error you have encountered.
- - body - The parsed request body. All responses are JSON so we parse this for you, and give you the result.
- - status_code - The HTTP status code of the response. This partially informs you about the success of your API request.
- - headers - An object containing all of the response headers.
+
+Name        | Type     | Description
+------------|----------|------------
+error       | error    | If this is provided, it means the request failed. The other parameters may, or may not contain additional information. You should check the status code to understand exactly what error you have encountered.
+body        | object   | The parsed request body. All responses are JSON so we parse this for you, and give you the result.
+status_code | number   | The HTTP status code of the response. This partially informs you about the success of your API request.
+headers     | object   | An object containing all of the response headers.
+
 
 
     	lib.request(/*options*/{
