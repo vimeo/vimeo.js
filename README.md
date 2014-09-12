@@ -147,7 +147,7 @@ headers     | object   | An object containing all of the response headers.
 
 
 ## Upload Videos
-The API library has a ````upload```` method which takes three parameters.
+The API library has a ````streamingUpload```` method which takes three parameters.
 
 Name      | Type     | Description
 ----------|----------|------------
@@ -157,9 +157,9 @@ callback  | function | A callback that will be executed when the upload is compl
 
 **Upload**
 
-    lib.upload('/home/aaron/Downloads/ada.mp4',  function (error, body, status_code, headers) {
-        if (err) {
-            return throw err;
+    lib.streamingUpload('/home/aaron/Downloads/ada.mp4',  function (error, body, status_code, headers) {
+        if (error) {
+            return throw error;
         }
         
         lib.request(headers.location, function (error, body, status_code, headers) {
@@ -169,9 +169,9 @@ callback  | function | A callback that will be executed when the upload is compl
 
 **Replace**
 
-    lib.upload('/home/aaron/Downloads/ada.mp4', '/videos/12345',  function (error, body, status_code, headers) {
-        if (err) {
-            return throw err;
+    lib.streamingUpload('/home/aaron/Downloads/ada.mp4', '/videos/12345',  function (error, body, status_code, headers) {
+        if (error) {
+            return throw error;
         }
         
         lib.request(headers.location, function (error, body, status_code, headers) {
