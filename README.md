@@ -1,22 +1,19 @@
-vimeo.js
-========
-
-## Get started with the Vimeo API
+# Get started with the Vimeo API
 
 There is a lot of information about the Vimeo API at https://developer.vimeo.com/api/start. Most of your questions will be answered there!
 
-## Direct Help
+# Direct Help
 
  * [Stack Overflow](http://stackoverflow.com/questions/tagged/vimeo-api)
  * [Google Group](https://groups.google.com/forum/#!forum/vimeo-api)
  * [Vimeo Support](https://vimeo.com/help/contact)
 
-## Installation
+# Installation
 
     npm install vimeo-api
 
 
-## Creating your Vimeo library
+# Creating your Vimeo library
 
 All API requests, and examples in this file must create a Vimeo object. Your ```CLIENT_ID``` and ```CLIENT_SECRET``` can be found on your app page under the OAuth 2 tab. If you have not yet created an API App with vimeo, you can create one at https://developer.vimeo.com/api/apps.
 
@@ -26,7 +23,7 @@ All API requests, and examples in this file must create a Vimeo object. Your ```
 ```
 
 
-## Generate your Access token
+# Generate your Access token
 
 All requests require access tokens. There are two types of access tokens.
  - [Unauthenticated](#unauthenticated) - Access tokens without a user. These tokens can only view public data
@@ -95,7 +92,7 @@ state        | string   | A value unique to this authorization request. You shou
         });
 ```
 
-## Make requests
+# Make requests
 
 The API library has a ````request```` method which takes two parameters
 
@@ -146,7 +143,7 @@ headers     | object   | An object containing all of the response headers.
         });
 
 
-## Upload Videos
+# Upload Videos
 The API library has a ````streamingUpload```` method which takes three parameters.
 
 Name      | Type     | Description
