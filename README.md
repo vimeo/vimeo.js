@@ -182,6 +182,6 @@ callback  | function | A callback that will be executed when the upload is compl
 
 # Contributors
 
-[Dashron](https://github.com/dashron)
-[greedo](https://github.com/greedo)
-[AidenMontgomery](https://github.com/AidenMontgomery) [ced26262d710abe462ecc8a8a9ea97aff825e026](https://github.com/vimeo/vimeo.js/commit/ced26262d710abe462ecc8a8a9ea97aff825e026)
+- [Dashron](https://github.com/dashron)
+- [greedo](https://github.com/greedo)
+- [AidenMontgomery](https://github.com/AidenMontgomery) [ced26262d710abe462ecc8a8a9ea97aff825e026](https://github.com/vimeo/vimeo.js/commit/ced26262d710abe462ecc8a8a9ea97aff825e026)
