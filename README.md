@@ -17,9 +17,13 @@ There is a lot of information about the Vimeo API at https://developer.vimeo.com
 
 All API requests, and examples in this file must create a Vimeo object. Your ```CLIENT_ID``` and ```CLIENT_SECRET``` can be found on your app page under the OAuth 2 tab. If you have not yet created an API App with vimeo, you can create one at https://developer.vimeo.com/api/apps.
 
+You can optionally provide an ACCESS_TOKEN to the constructor. This parameter is optional, and provided as a convenience. Access tokens are only required to [make requests](#make-requests), and can be set later through the `access_token` property.
+
+Access tokens can be generated on your Vimeo app page, or [through the API](#generate-your-access-token).
+
 ```JavaScript
     var Vimeo = require('vimeo-api').Vimeo;
-    var lib = new Vimeo(CLIENT_ID, CLIENT_SECRET);
+    var lib = new Vimeo(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN);
 ```
 
 
