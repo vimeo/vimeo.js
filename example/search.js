@@ -1,6 +1,6 @@
 "use strict";
 /**
- *   Copyright 2013 Vimeo
+ *   Copyright 2014 Vimeo
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -30,16 +30,15 @@ try {
 function makeRequest(lib) {
     // Make an API request
     lib.request({
-        // This returns page 2 results for all videos containing myquery, sorted by 
-        // relevancy, ascending direction, using the CC filter with 10 items on the page
+        // This returns the first page of videos containing the term "myquery".
+	// These videos will be sorted by most relevant to least relevant
         path : '/videos',
         query : {
-            page : 2,
+            page : 1,
             per_page : 10,
             query : 'myquery',
             sort : 'relevant',
-            direction : 'asc',
-            filter : 'CC'
+            direction : 'asc'
         }
     }, function (error, body, status_code, headers) {
         if (error) {
@@ -57,9 +56,6 @@ function makeRequest(lib) {
     });
 }
 
-// Here we have to build the vimeo library using the client_id, client_secret and an access token
-// For the request we make below (/channels) the access token can be a client access token 
-// instead of a user access token.
 var lib = new Vimeo(config.client_id, config.client_secret);
 
 if (config.access_token) {
