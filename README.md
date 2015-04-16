@@ -10,7 +10,7 @@ There is a lot of information about the Vimeo API at https://developer.vimeo.com
 
 # Installation
 
-    npm install vimeo-api
+    npm install vimeo
 
 
 # Creating your Vimeo library
@@ -22,7 +22,7 @@ You can optionally provide an ACCESS_TOKEN to the constructor. This parameter is
 Access tokens can be generated on your Vimeo app page, or [through the API](#generate-your-access-token).
 
 ```JavaScript
-    var Vimeo = require('vimeo-api').Vimeo;
+    var Vimeo = require('vimeo').Vimeo;
     var lib = new Vimeo(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN);
 ```
 

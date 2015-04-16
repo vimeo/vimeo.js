@@ -1,5 +1,5 @@
 {
-  "name": "vimeo-api",
+  "name": "vimeo",
   "version": "1.1.2",
   "description": "A node.js library for the new Vimeo api",
   "main": "index.js",
