@@ -160,7 +160,7 @@ callback  | function | A callback that will be executed when the upload is compl
 
     lib.streamingUpload('/home/aaron/Downloads/ada.mp4',  function (error, body, status_code, headers) {
         if (error) {
-            return throw error;
+            throw error;
         }
         
         lib.request(headers.location, function (error, body, status_code, headers) {
@@ -172,7 +172,7 @@ callback  | function | A callback that will be executed when the upload is compl
 
     lib.streamingUpload('/home/aaron/Downloads/ada.mp4', '/videos/12345',  function (error, body, status_code, headers) {
         if (error) {
-            return throw error;
+            throw error;
         }
         
         lib.request(headers.location, function (error, body, status_code, headers) {
