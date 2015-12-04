@@ -15,7 +15,7 @@ There is a lot of information about the Vimeo API at https://developer.vimeo.com
 
 # Creating your Vimeo library
 
-All API requests, and examples in this file must create a Vimeo object. Your ```CLIENT_ID``` and ```CLIENT_SECRET``` can be found on your app page under the OAuth 2 tab. If you have not yet created an API App with vimeo, you can create one at https://developer.vimeo.com/api/apps.
+All API requests, and examples in this file must create a Vimeo object. Your ```CLIENT_ID``` and ```CLIENT_SECRET``` can be found on your app page under the Authentication tab. If you have not yet created an API App with vimeo, you can create one at https://developer.vimeo.com/apps.
 
 You can optionally provide an ACCESS_TOKEN to the constructor. This parameter is optional, and provided as a convenience. Access tokens are only required to [make requests](#make-requests), and can be set later through the `access_token` property.
 
