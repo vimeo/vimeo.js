@@ -34,10 +34,15 @@ if (!config.access_token) {
 var file_path = process.argv[2];
 
 lib.access_token = config.access_token;
-lib.streamingUpload(file_path, function (err, body, status, headers) {
-    if (err) {
-        return console.log(err);
+lib.streamingUpload(file_path, 
+    function (err, body, status, headers) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log(status);
+        console.log(headers.location);
+    },
+    function(percentage) {
+            console.log(Math.round(percentage) + "%" + " uploaded\n");
     }
-    console.log(status);
-    console.log(headers.location);
-});
+);
