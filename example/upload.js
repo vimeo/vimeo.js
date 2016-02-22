@@ -42,7 +42,7 @@ lib.streamingUpload(file_path,
         console.log(status);
         console.log(headers.location);
     },
-    function(percentage) {
-            console.log(Math.round(percentage) + "%" + " uploaded\n");
+    function (percentage) {
+        console.log(Math.round(percentage) + '%' + ' uploaded\n');
     }
 );
