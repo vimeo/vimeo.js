@@ -18,26 +18,32 @@
 var Vimeo = require('../index').Vimeo;
 
 try {
-    var config = require('./config.json');
+	var config = require('./config.json');
 } catch (error) {
-    console.error('ERROR: For this example to run properly you must create an api app at developer.vimeo.com/apps/new and set your callback url to http://localhost:8080/oauth_callback');
-    console.error('ERROR: Once you have your app, make a copy of config.json.example named "config.json" and add your client id, client secret and access token');
-    return;
+	console.error('ERROR: For this example to run properly you must create an api app at developer.vimeo.com/apps/new and set your callback url to http://localhost:8080/oauth_callback');
+	console.error('ERROR: Once you have your app, make a copy of config.json.example named "config.json" and add your client id, client secret and access token');
+	return;
 }
 
 var lib = new Vimeo(config.client_id, config.client_secret);
 if (!config.access_token) {
-    throw new Error('You can not upload a video without configuring an access token');
+	throw new Error('You can not upload a video without configuring an access token');
 }
 
 // The file to upload should be passed in as the first argument to this script
 var file_path = process.argv[2];
 
 lib.access_token = config.access_token;
-lib.streamingUpload(file_path, function (err, body, status, headers) {
-    if (err) {
-        return console.log(err);
-    }
-    console.log(status);
-    console.log(headers.location);
-});
+lib.streamingUpload(file_path, 
+	null,
+	function (err, body, status, headers) {
+		if (err) {
+			return console.log(err);
+		}
+		console.log(status);
+		console.log(headers.location);
+	},
+	function (percentage) {
+		console.log(Math.round(percentage) + '%' + ' uploaded\n');
+	}
+);
