@@ -148,13 +148,15 @@ headers     | object   | An object containing all of the response headers.
 
 
 # Upload Videos
-The API library has a ````streamingUpload```` method which takes three parameters.
+The API library has a ````streamingUpload```` method which takes four parameters.
 
 Name      | Type     | Description
 ----------|----------|------------
 file      | string   | Full path to the upload file on the local system
 video_uri | string   | (Optional) Uri of an existing video. If provided, the uploaded video will replace the source file of this video.
 callback  | function | A callback that will be executed when the upload is comple, or has failed. It will match the callback of an [API request](#callback).
+progress_callback | function | A callback that will be executed periodically during the file upload. This callback receives a single parameter, and it will be a one, two or three digit integer representing the upload progress.
+function (path, video_uri, callback, progress_callback) {
 
 **Upload**
 
@@ -166,6 +168,8 @@ callback  | function | A callback that will be executed when the upload is compl
         lib.request(headers.location, function (error, body, status_code, headers) {
             console.log(body);
         });
+    }, function (percentage) {
+        console.log("You have uploaded " + percentage + "% of the video");
     });
 
 **Replace**
@@ -178,6 +182,8 @@ callback  | function | A callback that will be executed when the upload is compl
         lib.request(headers.location, function (error, body, status_code, headers) {
             console.log(body);
         });
+    }, function (percentage) {
+        console.log("You have uploaded " + percentage + "% of the video");
     });
 
 # Contributors
@@ -187,5 +193,7 @@ callback  | function | A callback that will be executed when the upload is compl
 - [AidenMontgomery](https://github.com/AidenMontgomery) [[ced26262d710abe462ecc8a8a9ea97aff825e026](https://github.com/vimeo/vimeo.js/commit/ced26262d710abe462ecc8a8a9ea97aff825e026)]
 - [Craig Rogers](https://github.com/twentyrogersc) Thanks for the name!
 - [Jonathan Pirnay](https://github.com/johnnycrab)
+- [gino8080](https://github.com/gino8080)
+- [Zena Hirsch](https://github.com/zenahirsch)
 
 
