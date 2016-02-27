@@ -156,7 +156,6 @@ file      | string   | Full path to the upload file on the local system
 video_uri | string   | (Optional) Uri of an existing video. If provided, the uploaded video will replace the source file of this video.
 callback  | function | A callback that will be executed when the upload is comple, or has failed. It will match the callback of an [API request](#callback).
 progress_callback | function | A callback that will be executed periodically during the file upload. This callback receives a single parameter, and it will be a one, two or three digit integer representing the upload progress.
-function (path, video_uri, callback, progress_callback) {
 
 **Upload**
 
