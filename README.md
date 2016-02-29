@@ -155,7 +155,7 @@ Name      | Type     | Description
 file      | string   | Full path to the upload file on the local system
 video_uri | string   | (Optional) Uri of an existing video. If provided, the uploaded video will replace the source file of this video.
 callback  | function | A callback that will be executed when the upload is comple, or has failed. It will match the callback of an [API request](#callback).
-progress_callback | function | A callback that will be executed periodically during the file upload. This callback receives a single parameter, and it will be a one, two or three digit integer representing the upload progress.
+progress_callback | function | A callback that will be executed periodically during the file upload. This callback receives two parameters, the total bytes uploaded and the total file size. Note that `console.log` is slow, and frequent logs can negatively impact your performance speed.
 
 **Upload**
 
@@ -167,8 +167,8 @@ progress_callback | function | A callback that will be executed periodically dur
         lib.request(headers.location, function (error, body, status_code, headers) {
             console.log(body);
         });
-    }, function (percentage) {
-        console.log("You have uploaded " + percentage + "% of the video");
+    }, function (upload_size, file_size) {
+        console.log("You have uploaded " + Math.round((uploaded_size/file_size) * 100) + "% of the video");
     });
 
 **Replace**
@@ -181,8 +181,8 @@ progress_callback | function | A callback that will be executed periodically dur
         lib.request(headers.location, function (error, body, status_code, headers) {
             console.log(body);
         });
-    }, function (percentage) {
-        console.log("You have uploaded " + percentage + "% of the video");
+    }, function (upload_size, file_size) {
+        console.log("You have uploaded " + Math.round((uploaded_size/file_size) * 100) + "% of the video");
     });
 
 # Contributors
