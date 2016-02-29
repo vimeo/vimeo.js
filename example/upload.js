@@ -33,9 +33,12 @@ if (!config.access_token) {
 // The file to upload should be passed in as the first argument to this script
 var file_path = process.argv[2];
 
+// This variable, and the logic related to it helps ensure we only log the percentage
+//      if the percentage has changed. 
+var prev_percentage = -1;
+
 lib.access_token = config.access_token;
 lib.streamingUpload(file_path, 
-	null,
 	function (err, body, status, headers) {
 		if (err) {
 			return console.log(err);
@@ -43,7 +46,12 @@ lib.streamingUpload(file_path,
 		console.log(status);
 		console.log(headers.location);
 	},
-	function (percentage) {
-		console.log(Math.round(percentage) + '%' + ' uploaded\n');
+	function (uploaded_size, file_size) {
+		var percentage = Math.round((uploaded_size/file_size) * 100);
+
+		if (percentage != prev_percentage) {
+			console.log(percentage + '%' + ' uploaded\n');
+			prev_percentage = percentage;
+		}
 	}
 );
