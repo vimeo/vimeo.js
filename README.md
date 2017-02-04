@@ -168,7 +168,7 @@ progress_callback | function | A callback that will be executed periodically dur
             console.log(body);
         });
     }, function (upload_size, file_size) {
-        console.log("You have uploaded " + Math.round((uploaded_size/file_size) * 100) + "% of the video");
+        console.log("You have uploaded " + Math.round((upload_size/file_size) * 100) + "% of the video");
     });
 
 **Replace**
