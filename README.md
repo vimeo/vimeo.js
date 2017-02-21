@@ -38,14 +38,14 @@ All requests require access tokens. There are two types of access tokens.
 Unauthenticated API requests must generate an access token. You should not generate a new access token for each request, you should request an access token once and use it forever.
 
 ```JavaScript
-    // scope is an array of permissions your token needs to access. You can read more at https://developer.vimeo.com/api/authentication#scopes
+    // scope is an array of permissions your token needs to access. You can read more at https://developer.vimeo.com/api/authentication#supported-scopes
     lib.generateClientCredentials(scope, function (err, access_token) {
         if (err) {
                 throw err;
         }
 
         var token = access_token.access_token;
-        
+
         // Other useful information is included alongside the access token
         // We include the final scopes granted to the token. This is important because the user (or api) might revoke scopes during the authentication process
         var scopes = access_token.scope;
@@ -67,12 +67,12 @@ Name         | Type     | Description
 redirect_uri | string   | The uri the user is redirected to in step 3. This value must be provided to every step of the authorization process including creating your app, building your authorization endpoint and exchanging your authorization code for an access token
 scope        | array    | An array of permissions your token needs to access. You can read more at https://developer.vimeo.com/api/authentication#scopes
 state        | string   | A value unique to this authorization request. You should generate it randomly, and validate it in step 3.
-        
-        
+
+
 2. Your user will need to access the authorization endpoint (either by cliking the link or through a redirect). On the authorization endpoint the user will have the option to deny your app any scopes you have requested. If they deny your app, they will be redirected back to your redirect_url with an ````error```` parameter.
 
-3. If the user accepts your app, they will be redirected back to your redirect\_uri with a ````code```` and ````state```` query parameter (eg. http://yourredirect.com?code=abc&state=xyz). 
-    1. You must validate that the ```status``` matches your status from step 1. 
+3. If the user accepts your app, they will be redirected back to your redirect\_uri with a ````code```` and ````state```` query parameter (eg. http://yourredirect.com?code=abc&state=xyz).
+    1. You must validate that the ```status``` matches your status from step 1.
     2. If the status is valid, you can exchange your code and redirect\_uri for an access token.
 
 ```JavaScript
@@ -81,16 +81,16 @@ state        | string   | A value unique to this authorization request. You shou
             if (err) {
                     return response.end("error\n" + err);
             }
-        
+
             if (token.access_token) {
                     // At this state the code has been successfully exchanged for an access token
                     lib.access_token = token.access_token;
-    
+
                     // Other useful information is included alongside the access token
                     // We include the final scopes granted to the token. This is important because the user (or api) might revoke scopes during the authentication process
                     var scopes = token.scope;
-                    
-                    // We also include the full user response of the newly authenticated user. 
+
+                    // We also include the full user response of the newly authenticated user.
                     var user = access_token.user;
             }
         });
@@ -139,7 +139,7 @@ headers     | object   | An object containing all of the response headers.
                 console.log('body');
                 console.log(body);
             }
-            
+
             console.log('status code');
             console.log(status_code);
             console.log('headers');
@@ -163,7 +163,7 @@ progress_callback | function | A callback that will be executed periodically dur
         if (error) {
             throw error;
         }
-        
+
         lib.request(headers.location, function (error, body, status_code, headers) {
             console.log(body);
         });
@@ -177,7 +177,7 @@ progress_callback | function | A callback that will be executed periodically dur
         if (error) {
             throw error;
         }
-        
+
         lib.request(headers.location, function (error, body, status_code, headers) {
             console.log(body);
         });
