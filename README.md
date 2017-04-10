@@ -194,5 +194,5 @@ progress_callback | function | A callback that will be executed periodically dur
 - [Jonathan Pirnay](https://github.com/johnnycrab)
 - [gino8080](https://github.com/gino8080)
 - [Zena Hirsch](https://github.com/zenahirsch)
-
+- [OmerZfira](https://github.com/OmerZfira)
 
