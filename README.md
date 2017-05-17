@@ -123,13 +123,15 @@ headers     | object   | An object containing all of the response headers.
 
 
 
+```
     	lib.request(/*options*/{
             // This is the path for the videos contained within the staff picks channels
             path : '/channels/staffpicks/videos',
             // This adds the parameters to request page two, and 10 items per page
             query : {
                 page : 2,
-                per_page : 10
+                per_page : 10,
+                fields: 'uri,name,description,duration,created_time,modified_time'
             }
         }, /*callback*/function (error, body, status_code, headers) {
             if (error) {
@@ -145,7 +147,32 @@ headers     | object   | An object containing all of the response headers.
             console.log('headers');
             console.log(headers);
         });
+```
 
+### Rate Limiting
+You should ensure to set JSON filter fields on **all** requests to ensure a steady and higher [`X-RateLimit-Limit`](https://developer.vimeo.com/guidelines/rate-limiting).
+
+There is an open [issue#51](https://github.com/vimeo/vimeo.js/issues/51) to reflect that the [current documentation](https://developer.vimeo.com/api/start#identify-action) states that `POST`,`PUT`,`DELETE`, and `PATCH` requests must provide parameters in the body, but this will not work with the JSON filter request. Here is an example of a properly formed `DELETE` request.
+
+```
+lib.request(/*options*/{
+        method: "DELETE",
+        path : '/channels/12345?fields=uri'
+    }, /*callback*/function (error, body, status_code, headers) {
+        if (error) {
+            console.log('error');
+            console.log(error);
+        } else {
+            console.log('body');
+            console.log(body);
+        }
+
+        console.log('status code');
+        console.log(status_code);
+        console.log('headers');
+        console.log(headers);
+    });
+```
 
 # Upload Videos
 The API library has a ````streamingUpload```` method which takes four parameters.
