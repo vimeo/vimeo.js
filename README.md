@@ -212,6 +212,28 @@ progress_callback | function | A callback that will be executed periodically dur
         console.log("You have uploaded " + Math.round((uploaded_size/file_size) * 100) + "% of the video");
     });
 
+The API library also supports ````tus```` uploading, which takes five parameters.
+
+Name              | Type     | Description
+------------------|----------|------------
+path              | string   | Full path to the upload file on the local system
+filename          | string   | (Optional) Name of the video on vimeo.com
+complete_callback | function | (Optional) Function to be called after upload completes
+progress_callback | function | (Optional) A callback that will be executed periodically during the file upload
+error_callback    | function | (Optional) A callback that will be executed if the upload results in an error. 
+
+**Upload**
+
+	lib.tusUpload("./video_file.mov", "your-video-file-name", function() {
+		console.log("File upload completed");
+	}, function(bytesUploaded, bytesTotal) {
+    	var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
+		console.log(bytesUploaded, bytesTotal, percentage + "%");
+	}, function(error) {
+		console.log("Failed because: " + error);
+	});
+
+
 # Contributors
 
 - [Dashron](https://github.com/dashron)
