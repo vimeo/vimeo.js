@@ -13,5 +13,8 @@
   "keywords": [
     "vimeo"
   ],
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "tus-js-client": "^1.4.5"
+  }
 }
