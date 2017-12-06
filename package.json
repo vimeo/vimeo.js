@@ -6,7 +6,8 @@
   "homepage": "https://developer.vimeo.com/",
   "main": "index.js",
   "directories": {
-    "example": "example"
+    "example": "example/",
+    "lib": "lib/"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,12 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "tus-js-client": "^1.4.5"
+  },
+  "devDependencies": {
+    "standard": "*"
+  },
+  "scripts": {
+    "standard": "standard index.js lib/*.js example/*.js",
+    "test": "npm run standard"
   }
 }
