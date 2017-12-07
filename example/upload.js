@@ -22,9 +22,10 @@ try {
   var config = require('./config.json')
 } catch (error) {
   console.error('ERROR: For this example to run properly you must create an API app at ' +
-    'https://developer.vimeo.com/apps/new and set your callback url to http://localhost:8080/oauth_callback')
-  console.error('ERROR: Once you have your app, make a copy of `config.json.example` named `config.json` and add ' +
-    'your client ID, client secret and access token.')
+    'https://developer.vimeo.com/apps/new and set your callback url to ' +
+    '`http://localhost:8080/oauth_callback`.')
+  console.error('ERROR: Once you have your app, make a copy of `config.json.example` named ' +
+    '`config.json` and add your client ID, client secret and access token.')
   process.exit()
 }
 
@@ -33,29 +34,25 @@ if (!config.access_token) {
   throw new Error('You can not upload a video without configuring an access token.')
 }
 
+lib.setAccessToken(config.access_token)
+
 // The file to upload should be passed in as the first argument to this script
 var filePath = process.argv[2]
 
-// This variable, and the logic related to it helps ensure we only log the percentage if the percentage has changed.
-var prevPercentage = -1
+// Any parameters to set when creating your video
+var params = {}
 
-lib.access_token = config.access_token
-lib.streamingUpload(
+lib.upload(
   filePath,
-  function (err, body, status, headers) {
-    if (err) {
-      return console.log(err)
-    }
-
-    console.log(status)
-    console.log(headers.location)
+  params,
+  function (uri) {
+    console.log('File upload completed. Your Vimeo URI is:', uri)
   },
-  function (uploadedSize, fileSize) {
-    var percentage = Math.round((uploadedSize / fileSize) * 100)
-
-    if (percentage !== prevPercentage) {
-      console.log(percentage + '%' + ' uploaded\n')
-      prevPercentage = percentage
-    }
+  function (bytesUploaded, bytesTotal) {
+    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+    console.log(bytesUploaded, bytesTotal, percentage + '%')
+  },
+  function (error) {
+    console.log('Failed because: ' + error)
   }
 )
