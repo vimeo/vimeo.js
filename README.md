@@ -1,7 +1,7 @@
 # <img src="https://user-images.githubusercontent.com/33762/33720344-abc20bb8-db31-11e7-8362-59a4985aeff0.png" width="250" />
 
-[![License](https://img.shields.io/github/license/vimeo/vimeo.js.svg)](https://www.npmjs.com/package/vimeo)
 [![npm](https://img.shields.io/npm/v/vimeo.svg?style=flat-square)](https://www.npmjs.com/package/vimeo)
+[![License](https://img.shields.io/github/license/vimeo/vimeo.js.svg)](https://www.npmjs.com/package/vimeo)
 
 This is a simple Node.js library for interacting with the [Vimeo API](https://developers.vimeo.com).
 
@@ -10,7 +10,6 @@ This is a simple Node.js library for interacting with the [Vimeo API](https://de
 - [Troubleshooting](#troubleshooting)
 - [Installation](#installation)
 - [Usage](#usage)
-    - [Creating your Vimeo library](#creating-your-vimeo-library)
     - [Authentication / Access Tokens](#generate-your-access-token)
         - [Unauthenticated](#unauthenticated)
         - [Authenticated](#authenticated)
@@ -33,7 +32,6 @@ There is a lot of information about the Vimeo API at https://developer.vimeo.com
     npm install vimeo
 
 ## Usage
-### Creating your Vimeo library
 
 All API requests, and examples in this file must create a Vimeo object. Your `CLIENT_ID` and `CLIENT_SECRET` can be found on your app page under the "Authentication" tab. If you have not yet created an API app with vimeo, you can create one at https://developer.vimeo.com/apps.
 
