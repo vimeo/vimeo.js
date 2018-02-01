@@ -29,24 +29,69 @@ try {
   process.exit()
 }
 
-var lib = new Vimeo(config.client_id, config.client_secret)
 if (!config.access_token) {
   throw new Error('You can not upload a video without configuring an access token.')
 }
 
-lib.setAccessToken(config.access_token)
+// Instantiate the library with your client id, secret and access token (pulled from dev site)
+var client = new Vimeo(config.client_id, config.client_secret, config.access_token)
 
-// The file to upload should be passed in as the first argument to this script
-var filePath = process.argv[2]
+// Create a variable with a hard coded path to your file system
+var filePath = '<full path to a video on the filesystem>'
 
-// Any parameters to set when creating your video
-var params = {}
+console.log('Uploading: ' + filePath)
 
-lib.upload(
+var params = {
+  'name': 'Vimeo API SDK test upload',
+  'description': "This video was uploaded through the Vimeo API's NodeJS SDK."
+}
+
+client.upload(
   filePath,
   params,
   function (uri) {
-    console.log('File upload completed. Your Vimeo URI is:', uri)
+    // Get the metadata response from the upload and log out the Vimeo.com url
+    client.request(uri + '?fields=link', function (error, body, statusCode, headers) {
+      if (error) {
+        console.log('There was an error making the request.')
+        console.log('Server reported: ' + error)
+        return
+      }
+
+      console.log('"' + filePath + '" has been uploaded to ' + body.link)
+
+      // Make an API call to edit the title and description of the video.
+      client.request({
+        method: 'PATCH',
+        path: uri,
+        params: {
+          'name': 'Vimeo API SDK test edit',
+          'description': "This video was edited through the Vimeo API's NodeJS SDK."
+        }
+      }, function (error, body, statusCode, headers) {
+        if (error) {
+          console.log('There was an error making the request.')
+          console.log('Server reported: ' + error)
+          return
+        }
+
+        console.log('The title and description for ' + uri + ' has been edited.')
+
+        // Make an API call to see if the video is finished transcoding.
+        client.request(
+          uri + '?fields=transcode.status',
+          function (error, body, statusCode, headers) {
+            if (error) {
+              console.log('There was an error making the request.')
+              console.log('Server reported: ' + error)
+              return
+            }
+
+            console.log('The transcode status for ' + uri + ' is: ' + body.transcode.status)
+          }
+        )
+      })
+    })
   },
   function (bytesUploaded, bytesTotal) {
     var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)

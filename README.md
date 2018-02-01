@@ -41,7 +41,7 @@ Access tokens can be generated on your Vimeo app page, or [through the API](#gen
 
 ```js
 var Vimeo = require('vimeo').Vimeo;
-var lib = new Vimeo(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN);
+var client = new Vimeo(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN);
 ```
 
 ### Generate your access token
@@ -57,7 +57,7 @@ Unauthenticated API requests must generate an access token. You should not gener
 ```js
 // `scope` is an array of permissions your token needs to access. You
 // can read more at https://developer.vimeo.com/api/authentication#supported-scopes
-lib.generateClientCredentials(scope, function (err, response) {
+client.generateClientCredentials(scope, function (err, response) {
   if (err) {
     throw err;
   }
@@ -79,7 +79,7 @@ lib.generateClientCredentials(scope, function (err, response) {
 1. Build a link to Vimeo so your users can authorize your app.
 
 ```js
-var url = lib.buildAuthorizationEndpoint(redirect_uri, scopes, state)
+var url = client.buildAuthorizationEndpoint(redirect_uri, scopes, state)
 ```
 
 Name           | Type     | Description
@@ -96,7 +96,7 @@ Name           | Type     | Description
 
 ```js
 // `redirect_uri` must be provided, and must match your configured URI.
-lib.accessToken(code, redirect_uri, function (err, response) {
+client.accessToken(code, redirect_uri, function (err, response) {
   if (err) {
     return response.end("error\n" + err);
   }
@@ -104,7 +104,7 @@ lib.accessToken(code, redirect_uri, function (err, response) {
   if (response.access_token) {
     // At this state the code has been successfully exchanged for an
     // access token
-    lib.setAccessToken(response.access_token);
+    client.setAccessToken(response.access_token);
 
     // Other useful information is included alongside the access token,
     // which you can dump out to see, or visit our API documentation.
@@ -145,7 +145,7 @@ Name          | Type     | Description
 `headers`     | object   | An object containing all of the response headers.
 
 ```js
-lib.request(/*options*/{
+client.request(/*options*/{
   // This is the path for the videos contained within the staff picks
   // channels
   path: '/channels/staffpicks/videos',
@@ -178,7 +178,7 @@ You should ensure to set [JSON filter](https://developer.vimeo.com/api/common-fo
 There is an open [issue#51](https://github.com/vimeo/vimeo.js/issues/51) to reflect that the [current documentation](https://developer.vimeo.com/api/start#identify-action) states that `POST`,`PUT`,`DELETE`, and `PATCH` requests must provide parameters in the body, but this will not work with the JSON filter request. Here is an example of a properly formed `DELETE` request.
 
 ```js
-lib.request(/*options*/{
+client.request(/*options*/{
   method: 'DELETE',
   path: '/channels/12345?fields=uri'
 }, /*callback*/function (error, body, status_code, headers) {
@@ -211,7 +211,7 @@ Name               | Type              | Description
 `errorCallback`    | function          | A callback that will be executed when any errors happen during the upload process. It will have one argument, `err`, that will be a string error message.
 
 ```js
-lib.upload(
+client.upload(
   '/home/aaron/Downloads/ada.mp4',
   function (uri) {
     console.log('File upload completed. Your Vimeo URI is:', uri)
@@ -238,7 +238,7 @@ Name               | Type              | Description
 `errorCallback`    | function          | A callback that will be executed when any errors happen during the upload process. It will have one argument, `err`, that will be a string error message.
 
 ```js
-lib.upload(
+client.upload(
   '/home/aaron/Downloads/ada-v2.mp4',
   '/videos/15'
   function (uri) {
