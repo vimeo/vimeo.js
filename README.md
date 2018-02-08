@@ -10,7 +10,7 @@ This is a simple Node.js library for interacting with the [Vimeo API](https://de
 - [Troubleshooting](#troubleshooting)
 - [Installation](#installation)
 - [Usage](#usage)
-    - [Authentication / Access Tokens](#generate-your-access-token)
+    - [Authentication and access tokens](#generate-your-access-token)
         - [Unauthenticated](#unauthenticated)
         - [Authenticated](#authenticated)
     - [Make requests](#make-requests)
@@ -19,12 +19,11 @@ This is a simple Node.js library for interacting with the [Vimeo API](https://de
 
 ## Get started with the Vimeo API
 
-There is a lot of information about the Vimeo API at https://developer.vimeo.com/api/start. Most of your questions will be answered there!
+There is a lot of information about the Vimeo API at https://developer.vimeo.com/api/start. Most of your questions are answered there!
 
 ## Direct Help
 
  * [Stack Overflow](http://stackoverflow.com/questions/tagged/vimeo-api)
- * [Google Group](https://groups.google.com/forum/#!forum/vimeo-api)
  * [Vimeo Support](https://vimeo.com/help/contact)
 
 ## Installation
@@ -33,11 +32,11 @@ There is a lot of information about the Vimeo API at https://developer.vimeo.com
 
 ## Usage
 
-All API requests, and examples in this file must create a Vimeo object. Your `CLIENT_ID` and `CLIENT_SECRET` can be found on your app page under the "Authentication" tab. If you have not yet created an API app with vimeo, you can create one at https://developer.vimeo.com/apps.
+All API requests and examples in this file must create a Vimeo object. Your `CLIENT_ID` and `CLIENT_SECRET` can be found on your app page under the Authentication tab. If you have not yet created an API app with Vimeo, you can create one at https://developer.vimeo.com/apps.
 
-You can optionally provide an `ACCESS_TOKEN` to the constructor. This parameter is optional, and provided as a convenience. Access tokens are only required to [make requests](#make-requests), and can be set later through the `setAccessToken` method.
+You can optionally provide an `ACCESS_TOKEN` to the constructor. Access tokens are required only to [make requests](#make-requests), and you can set them later through the `setAccessToken` method.
 
-Access tokens can be generated on your Vimeo app page, or [through the API](#generate-your-access-token).
+You can generate acces tokens on your Vimeo app page or [through the API](#generate-your-access-token).
 
 ```js
 var Vimeo = require('vimeo').Vimeo;
@@ -46,13 +45,14 @@ var client = new Vimeo(CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN);
 
 ### Generate your access token
 
-All requests require access tokens. There are two types of access tokens.
- - [Unauthenticated](#unauthenticated): Access tokens without a user. These tokens can only view public data
+All requests require access tokens. There are two types of access tokens:
+
+ - [Unauthenticated](#unauthenticated): Access tokens without a user. These tokens can view only public data.
  - [Authenticated](#authenticated): Access tokens with a user. These tokens interact on behalf of the authenticated user.
 
 #### Unauthenticated
 
-Unauthenticated API requests must generate an access token. You should not generate a new access token for each request, you should request an access token once and use it forever.
+Unauthenticated API requests must generate an access token. You should not generate a new access token for each request. Instead, request an access token once and use it forever.
 
 ```js
 // `scope` is an array of permissions your token needs to access. You
@@ -84,14 +84,14 @@ var url = client.buildAuthorizationEndpoint(redirect_uri, scopes, state)
 
 Name           | Type     | Description
 ---------------|----------|------------
-`redirect_uri` | string   | The URI the user is redirected to in step 3. This value must be provided to every step of the authorization process including creating your app, building your authorization endpoint and exchanging your authorization code for an access token
-`scope`        | array    | An array of permissions your token needs to access. You can read more at https://developer.vimeo.com/api/authentication#supported-scopes
-`state`        | string   | A value unique to this authorization request. You should generate it randomly, and validate it in step 3.
+`redirect_uri` | string   | The URI the user is redirected to in Step 3. This value must be provided to every step of the authorization process, including creating your app, building your authorization endpoint, and exchanging your authorization code for an access token.
+`scope`        | array    | An array of permissions your token needs to access. You can read more at https://developer.vimeo.com/api/authentication#supported-scopes.
+`state`        | string   | A value unique to this authorization request. You should generate it randomly and validate it in Step 3.
 
-2. Your user will need to access the authorization endpoint (either by cliking the link or through a redirect). On the authorization endpoint the user will have the option to deny your app any scopes you have requested. If they deny your app, they will be redirected back to your `redirect_url` with an `error` parameter.
+2. Your user needs to access the authorization endpoint (either by clicking the link or through a redirect). On the authorization endpoint, the user has the option to deny your app any scopes you have requested. If they deny your app, they are redirected back to your `redirect_url` with an `error` parameter.
 
-3. If the user accepts your app, they will be redirected back to your `redirect_uri` with a `code` and `state` query parameter (eg. http://yourredirect.com?code=abc&state=xyz).
-    1. You must validate that the `state` matches your state from step 1.
+3. If the user accepts your app, they are redirected back to your `redirect_uri` with a `code` and `state` query parameter (eg. http://yourredirect.com?code=abc&state=xyz).
+    1. You must validate that the `state` matches your state from Step 1.
     2. If the state is valid, you can exchange your code and `redirect_uri` for an access token.
 
 ```js
@@ -122,25 +122,25 @@ client.accessToken(code, redirect_uri, function (err, response) {
 ```
 
 ### Make requests
-The API library has a `request` method which takes two parameters
+The API library has a `request` method that takes two parameters.
 
 #### Options
-This object contains your request information in key value pairs
+This object contains your request information in key/value pairs.
 
 Name         | Type     | Description
 -------------|----------|------------
 `method`     | string   | The HTTP method (e.g.: `GET`)
 `path`       | string   | The URL path (e.g.: `/users/dashron`)
-`query`      | string   | An object containing all of your parameters (e.g.: `{"per_page": 5, "filter": "featured"}`. )
-`headers`    | object   | An object containing all additional headers (e.g.: `{"If-Modified-Since": "Mon, 03 Mar 2014 16:29:37 -0500"}`
+`query`      | string   | An object containing all of your parameters (for example, `{"per_page": 5, "filter": "featured"}`. )
+`headers`    | object   | An object containing all additional headers (for example, `{"If-Modified-Since": "Mon, 03 Mar 2014 16:29:37 -0500"}`
 
 #### Callback
-This function will be called once the upload process is complete
+This function is called once the upload process is complete.
 
 Name          | Type     | Description
 --------------|----------|------------
-`error`       | error    | If this is provided, it means the request failed. The other parameters may, or may not contain additional information. You should check the status code to understand exactly what error you have encountered.
-`body`        | object   | The parsed request body. All responses are JSON so we parse this for you, and give you the result.
+`error`       | error    | If this is provided, it means the request failed. The other parameters may or may not contain additional information. Check the status code to understand exactly what error you have encountered.
+`body`        | object   | The parsed request body. All responses are JSON, so we parse this for you and give you the result.
 `status_code` | number   | The HTTP status code of the response. This partially informs you about the success of your API request.
 `headers`     | object   | An object containing all of the response headers.
 
@@ -173,9 +173,9 @@ client.request(/*options*/{
 ```
 
 #### Rate limiting
-You should ensure to set [JSON filter](https://developer.vimeo.com/api/common-formats#json-filter) fields on **all** requests to ensure a steady and higher [`X-RateLimit-Limit`](https://developer.vimeo.com/guidelines/rate-limiting).
+You should ensure to set [JSON filter](https://developer.vimeo.com/api/common-formats#json-filter) fields on *all* requests to ensure a steady and higher [`X-RateLimit-Limit`](https://developer.vimeo.com/guidelines/rate-limiting).
 
-There is an open [issue#51](https://github.com/vimeo/vimeo.js/issues/51) to reflect that the [current documentation](https://developer.vimeo.com/api/start#identify-action) states that `POST`,`PUT`,`DELETE`, and `PATCH` requests must provide parameters in the body, but this will not work with the JSON filter request. Here is an example of a properly formed `DELETE` request.
+There is an open [issue#51](https://github.com/vimeo/vimeo.js/issues/51) to reflect that the [current documentation](https://developer.vimeo.com/api/start#identify-action) states that POST, PUT, DELETE, and PATCH requests must provide parameters in the body, but this doesn't work with the JSON filter request. Here is an example of a properly formed DELETE request:
 
 ```js
 client.request(/*options*/{
@@ -198,17 +198,17 @@ client.request(/*options*/{
 ```
 
 ### Uploading videos
-The API library has a `upload` method which takes five parameters.
+The API library has an `upload` method that takes five parameters.
 
-Internally, this library will execute a `tus` upload approach and send a file to the server with the [tus](https://tus.io/) upload protocol and [tus-js-client](https://www.npmjs.com/package/tus-js-client).
+Internally, this library executes a `tus` upload approach and sends a file to the server with the [tus](https://tus.io/) upload protocol and [tus-js-client](https://www.npmjs.com/package/tus-js-client).
 
 Name               | Type              | Description
 -------------------|-------------------|------------
-`path`             | string            | Full path to the upload file on the local system
-`params`           | object (optional) | Parameters to send when creating a new video (name, privacy restrictions, etc.). See the [`/me/videos` documentation](https://developer.vimeo.com/api/endpoints/videos#POST/users/{user_id}/videos) for supported parameters.
-`completeCallback` | function          | A callback that will be executed when the upload is complete. It will have one argument, `uri`, that is the `/videos/:id` URI for your uploaded video.
-`progressCallback` | function          | A callback that will be executed periodically during file uploading. This callback receives two parameters, `bytesUploaded` and `bytesTotal`. You can use this to determine how much of a percentage has been uploaded to the Vimeo servers.
-`errorCallback`    | function          | A callback that will be executed when any errors happen during the upload process. It will have one argument, `err`, that will be a string error message.
+`path`             | string            | Full path to the upload file on the local system.
+`params`           | object (optional) | Parameters to send when creating a new video (name, privacy restrictions, and so on). See the [`/me/videos` documentation](https://developer.vimeo.com/api/endpoints/videos#POST/users/{user_id}/videos) for supported parameters.
+`completeCallback` | function          | A callback that is executed when the upload is complete. It has one argument, `uri`, that is the `/videos/:id` URI for your uploaded video.
+`progressCallback` | function          | A callback that is executed periodically during file uploading. This callback receives two parameters, `bytesUploaded` and `bytesTotal`. You can use this to determine how much of a percentage has been uploaded to the Vimeo servers.
+`errorCallback`    | function          | A callback that is executed when any errors happen during the upload process. It has one argument, `err`, that is a string error message.
 
 ```js
 client.upload(
@@ -227,15 +227,15 @@ client.upload(
 ```
 
 #### Replacing video files
-To replace the source file of a video, you can call the `replace` method. It accepts five parameters.
+To replace the source file of a video, call the `replace` method. It accepts five parameters:
 
 Name               | Type              | Description
 -------------------|-------------------|------------
-`path`             | string            | Full path to the upload file on the local system
+`path`             | string            | Full path to the upload file on the local system.
 `videoUri`         | string            | Video URI of the video file to replace.
-`completeCallback` | function          | A callback that will be executed when the upload is complete. It will have one argument, `uri`, that is the `/videos/:id` URI for your uploaded video.
-`progressCallback` | function          | A callback that will be executed periodically during file uploading. This callback receives two parameters, `bytesUploaded` and `bytesTotal`. You can use this to determine how much of a percentage has been uploaded to the Vimeo servers.
-`errorCallback`    | function          | A callback that will be executed when any errors happen during the upload process. It will have one argument, `err`, that will be a string error message.
+`completeCallback` | function          | A callback that is executed when the upload is complete. It has one argument, `uri`, that is the `/videos/:id` URI for your uploaded video.
+`progressCallback` | function          | A callback that is executed periodically during file uploading. This callback receives two parameters, `bytesUploaded` and `bytesTotal`. You can use this to determine how much of a percentage has been uploaded to the Vimeo servers.
+`errorCallback`    | function          | A callback that is executed when any errors happen during the upload process. It has one argument, `err`, that will be a string error message.
 
 ```js
 client.upload(
@@ -256,8 +256,8 @@ client.upload(
 
 ## Troubleshooting
 
-If you have any questions or problems, create a [ticket](https://github.com/vimeo/vimeo.js/issues) or [contact us](https://vimeo.com/help/contact)
+If you have any questions or problems, create a [ticket](https://github.com/vimeo/vimeo.js/issues) or [contact us](https://vimeo.com/help/contact).
 
 ## Contributors
 
-To see the contributors please visit the [contributors graph](https://github.com/vimeo/vimeo.js/graphs/contributors).
+To see the contributors, please visit the [contributors graph](https://github.com/vimeo/vimeo.js/graphs/contributors).
