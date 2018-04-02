@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2] - 2018-04-02
+### Added
+- Changelog
+
+### Changed
+- Uploads no longer make a pre-emptive request to check the user's quota. This check is done automatically when making a POST to `/me/videos`. ([#70](https://github.com/vimeo/vimeo.js/pull/70))
+
 ## [2.0.1] - 2018-03-04
 ### Fixed
 - Fixed assigning an empty object when no params are passed to upload or replace. ([#66](https://github.com/vimeo/vimeo.js/pull/66), [@ArvinH](https://github.com/ArvinH))
@@ -37,6 +44,7 @@
 ### Added
 - First release.
 
+[2.0.2]: https://github.com/vimeo/vimeo.js/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/vimeo/vimeo.js/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/vimeo/vimeo.js/compare/1.2.1...2.0.0
 [1.2.1]: https://github.com/vimeo/vimeo.js/compare/1.2.0...1.2.1
