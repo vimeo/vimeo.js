@@ -18,7 +18,7 @@
   ],
   "readmeFilename": "README.md",
   "dependencies": {
-    "tus-js-client": "^1.4.5"
+    "tus-js-client": "^1.5.1"
   },
   "devDependencies": {
     "standard": "*"
