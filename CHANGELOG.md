@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.1.0] - 2018-04-03
+## Changed
+- Upgrading [tus-js-client](https://www.npmjs.com/package/tus-js-client) to `^1.5.1`. ([#73](https://github.com/vimeo/vimeo.js/issues/73))
+
 ## [2.0.2] - 2018-04-02
 ### Added
 - Changelog
@@ -44,6 +48,7 @@
 ### Added
 - First release.
 
+[2.1.0]: https://github.com/vimeo/vimeo.js/compare/2.0.2...2.1.0
 [2.0.2]: https://github.com/vimeo/vimeo.js/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/vimeo/vimeo.js/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/vimeo/vimeo.js/compare/1.2.1...2.0.0
