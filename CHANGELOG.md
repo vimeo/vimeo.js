@@ -24,7 +24,7 @@
 - Library now uses the [Standard](https://standardjs.com/) code style.  ([#58](https://github.com/vimeo/vimeo.js/pull/58))
 - Moving API requests over to use API v3.4. ([#58](https://github.com/vimeo/vimeo.js/pull/58))
 - Moving uploads over to using the new tus protocol. ([#58](https://github.com/vimeo/vimeo.js/pull/58), [@peixian](https://github.com/peixian))
-- Updating examples to use JSON filters. ([#54](https://github.com/vimeo/vimeo.js/pull/54), (@jehartzog)[https://github.com/jehartzog])
+- Updating examples to use JSON filters. ([#54](https://github.com/vimeo/vimeo.js/pull/54), [@jehartzog](https://github.com/jehartzog))
 
 ## [1.2.1] - 2017-04-10
 ### Fixed
