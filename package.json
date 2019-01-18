@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "chai": "^4.x.x",
+    "codecov": "^3.x.x",
     "mocha": "^5.x.x",
     "nyc": "^13.x.x",
     "sinon": "^7.x.x",
