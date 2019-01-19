@@ -205,7 +205,7 @@ Internally, this library executes a `tus` upload approach and sends a file to th
 Name               | Type              | Description
 -------------------|-------------------|------------
 `path`             | string            | Full path to the upload file on the local system.
-`params`           | object (optional) | Parameters to send when creating a new video (name, privacy restrictions, and so on). See the [`/me/videos` documentation](https://developer.vimeo.com/api/endpoints/videos#POST/users/{user_id}/videos) for supported parameters.
+`params`           | object (optional) | Parameters to send when creating a new video (name, privacy restrictions, and so on). See the [`/me/videos` documentation](https://developer.vimeo.com/api/reference/videos#upload_video) for supported parameters.
 `completeCallback` | function          | A callback that is executed when the upload is complete. It has one argument, `uri`, that is the `/videos/:id` URI for your uploaded video.
 `progressCallback` | function          | A callback that is executed periodically during file uploading. This callback receives two parameters, `bytesUploaded` and `bytesTotal`. You can use this to determine how much of a percentage has been uploaded to the Vimeo servers.
 `errorCallback`    | function          | A callback that is executed when any errors happen during the upload process. It has one argument, `err`, that is a string error message.

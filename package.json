@@ -21,10 +21,17 @@
     "tus-js-client": "^1.5.1"
   },
   "devDependencies": {
+    "chai": "^4.x.x",
+    "codecov": "^3.x.x",
+    "mocha": "^5.x.x",
+    "nyc": "^13.x.x",
+    "sinon": "^7.x.x",
     "standard": "*"
   },
   "scripts": {
-    "standard": "standard index.js lib/*.js example/*.js",
-    "test": "npm run standard"
+    "standard": "standard index.js lib/*.js example/*.js test/**/*.js",
+    "mocha": "nyc mocha --recursive --reporter landing --timeout=3000",
+    "test": "npm run standard && npm run mocha",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }
 }

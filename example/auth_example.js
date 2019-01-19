@@ -171,7 +171,7 @@ context.upload = function (path, videoUri) {
  */
 context.request = function (options) {
   if (typeof options === 'string') {
-    options = {path: options}
+    options = { path: options }
   }
 
   lib.request(options, function (err, data, status, headers) {
