@@ -15,5 +15,5 @@ matrix:
     node_js: 9
 script:
   - npm test
-after_success:
-  - npm run report-coverage
+#after_success:
+#  - npm run report-coverage
