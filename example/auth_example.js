@@ -49,7 +49,7 @@ const callbackUrl = 'http://localhost:8080/oauth_callback'
 // The authorization process requires the user to be redirected back to a webpage, so we can start
 // up a simple HTTP server here.
 const server = httpModule.createServer(function (request, response) {
-  const url = urlModule.URL(request.url, true)
+  const url = urlModule.parse(request.url, true) // eslint-disable-line n/no-deprecated-api
 
   // Once the user accepts your app, they will be redirected back to
   // `http://localhost:8080/oauth_callback`. If they are not redirected you should check your apps
