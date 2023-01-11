@@ -16,11 +16,12 @@
  *   limitations under the License.
  */
 
-var Vimeo = require('../index').Vimeo
-var util = require('util')
+const Vimeo = require('../index').Vimeo
+const util = require('util')
+let config = {}
 
 try {
-  var config = require('./config.json')
+  config = require('./config.json')
 } catch (error) {
   console.error('ERROR: For this example to run properly you must create an API app at ' +
     'https://developer.vimeo.com/apps/new and set your callback url to ' +
@@ -35,7 +36,7 @@ try {
 //
 // For the request we make below (/channels) the access token can be a client access token instead
 // of a user access token.
-var lib = new Vimeo(config.client_id, config.client_secret)
+const lib = new Vimeo(config.client_id, config.client_secret)
 
 if (config.access_token) {
   lib.setAccessToken(config.access_token)

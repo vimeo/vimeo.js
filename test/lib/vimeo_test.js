@@ -97,9 +97,9 @@ describe('Vimeo.generateClientCredentials', () => {
   describe('callback is called with the expected parameters', () => {
     it('request returns an error', () => {
       const error = 'Request Error'
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(error, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -110,9 +110,9 @@ describe('Vimeo.generateClientCredentials', () => {
     })
 
     it('request is successful', () => {
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(null, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -159,9 +159,9 @@ describe('Vimeo.accessToken', () => {
   describe('callback is called with the expected parameters', () => {
     it('request returns an error', () => {
       const error = 'Request Error'
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(error, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -172,9 +172,9 @@ describe('Vimeo.accessToken', () => {
     })
 
     it('request is successful', () => {
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(null, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -348,7 +348,7 @@ describe('Vimeo._handleRequest', () => {
     mockRes = new events.EventEmitter()
     mockRes.on = sinon.fake(mockRes.on)
     mockRes.setEncoding = sinon.fake()
-    mockRes.headers = { 'headers': 'value' }
+    mockRes.headers = { headers: 'value' }
   })
 
   afterEach(() => {
@@ -399,7 +399,7 @@ describe('Vimeo._handleRequest', () => {
     mockRes.emit('end')
     sinon.assert.calledOnce(mockCallback)
     sinon.assert.calledWith(mockCallback,
-      sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input',)),
+      sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')),
       '{"bad": "json"',
       mockRes.statusCode,
       mockRes.headers)

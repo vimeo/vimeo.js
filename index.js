@@ -13,6 +13,6 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-var vimeoModule = require('./lib/vimeo')
+const vimeoModule = require('./lib/vimeo')
 module.exports.vimeo_module = vimeoModule
 module.exports.Vimeo = vimeoModule.Vimeo
