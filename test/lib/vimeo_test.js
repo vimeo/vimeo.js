@@ -12,6 +12,10 @@ const events = require('events')
 const expect = require('chai').expect
 const sinon = require('sinon')
 
+afterEach(() => {
+  sinon.restore()
+})
+
 describe('Vimeo.buildAuthorizationEndpoint', () => {
   const REDIRECT_URL = 'https://myapp.com/login'
   const vimeo = new Vimeo('id', 'secret', 'token')
@@ -45,10 +49,6 @@ describe('Vimeo.buildAuthorizationEndpoint', () => {
 
 describe('Vimeo.generateClientCredentials', () => {
   const vimeo = new Vimeo('id', 'secret', 'token')
-
-  afterEach(() => {
-    sinon.restore()
-  })
 
   describe('request is called with the expected parameters', () => {
     let mockRequest
@@ -128,10 +128,6 @@ describe('Vimeo.accessToken', () => {
   const vimeo = new Vimeo('id', 'secret', 'token')
   const CODE = 'code'
   const REDIRECT_URI = 'redirectURI'
-
-  afterEach(() => {
-    sinon.restore()
-  })
 
   it('request is called with the expected parameters', () => {
     const mockRequest = sinon.fake()
@@ -223,22 +219,11 @@ describe('Vimeo._applyQuerystringParams', () => {
 })
 
 describe('Vimeo.request', () => {
-  afterEach(() => {
-    sinon.restore()
-  })
-
   const vimeo = new Vimeo('id', 'secret', 'token')
-
-  it('calls callback with an error if options has no path', () => {
-    const mockCallback = sinon.fake()
-    vimeo.request({}, mockCallback)
-
-    sinon.assert.calledOnce(mockCallback)
-    sinon.assert.calledWith(mockCallback, sinon.match.instanceOf(Error))
-  })
 
   describe('client.request is called with the expected options', () => {
     let mockHttpRequest, mockHttpsRequest, mockReq
+
     beforeEach(() => {
       mockReq = new events.EventEmitter()
       mockReq.on = sinon.fake(mockReq.on)
@@ -249,6 +234,14 @@ describe('Vimeo.request', () => {
       sinon.replace(http, 'request', mockHttpRequest)
       mockHttpsRequest = sinon.fake.returns(mockReq)
       sinon.replace(https, 'request', mockHttpsRequest)
+    })
+
+    it('calls callback with an error if options has no path', () => {
+      const mockCallback = sinon.fake()
+      vimeo.request({}, mockCallback)
+
+      sinon.assert.calledOnce(mockCallback)
+      sinon.assert.calledWith(mockCallback, sinon.match.instanceOf(Error))
     })
 
     it('parses options if passed as a string', () => {
@@ -341,19 +334,11 @@ describe('Vimeo.request', () => {
 })
 
 describe('Vimeo.request test using Promise', () => {
-  afterEach(() => {
-    sinon.restore()
-  })
-
   const vimeo = new Vimeo('id', 'secret', 'token')
 
-  it('returns an error if options has no path', async () => {
-    const result = sinon.match.instanceOf(Error).and(sinon.match.has('message', 'You must provide an API path.'))
-    await vimeo.request({}).catch((error) => sinon.assert.match(error, result))
-  })
-
   describe('client.request is called with the expected options', () => {
-    let mockHttpRequest, mockHttpsRequest, mockReq
+    let mockHttpRequest, mockHttpsRequest, mockReq, handleRequestStub
+
     beforeEach(() => {
       mockReq = new events.EventEmitter()
       mockReq.on = sinon.fake(mockReq.on)
@@ -364,7 +349,13 @@ describe('Vimeo.request test using Promise', () => {
       sinon.replace(http, 'request', mockHttpRequest)
       mockHttpsRequest = sinon.fake.returns(mockReq)
       sinon.replace(https, 'request', mockHttpsRequest)
-      // sinon.replace(vimeo, "_handleRequest", (resolve) => {console.log('mock _handleRequest'); resolve('Success.')})
+
+      handleRequestStub = sinon.stub(vimeo, '_handleRequest').callsFake((resolve) => { resolve('Success.') })
+    })
+
+    it('returns an error if options has no path', async () => {
+      const error = sinon.match.instanceOf(Error).and(sinon.match.has('message', 'You must provide an API path.'))
+      await vimeo.request({}).catch((e) => sinon.assert.match(e, error))
     })
 
     it('parses options if passed as a string', async () => {
@@ -372,6 +363,7 @@ describe('Vimeo.request test using Promise', () => {
 
       sinon.assert.calledOnce(mockHttpsRequest)
       sinon.assert.calledWith(mockHttpsRequest, sinon.match({ method: 'GET', path: '/path', host: 'example.com', port: '1234' }))
+      sinon.assert.calledOnce(handleRequestStub)
     })
 
     it('adds a leading slash if missing', async () => {
@@ -403,7 +395,7 @@ describe('Vimeo.request test using Promise', () => {
     })
 
     it('sends body as string if content type is not application/json', async () => {
-      vimeo.request({ method: 'POST', path: '/path', query: { a: 'b' }, headers: { 'Content-Type': 'not-application/json' } })
+      await vimeo.request({ method: 'POST', path: '/path', query: { a: 'b' }, headers: { 'Content-Type': 'not-application/json' } })
 
       sinon.assert.calledOnce(mockHttpsRequest)
       sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'a=b' }))
@@ -436,22 +428,39 @@ describe('Vimeo.request test using Promise', () => {
       sinon.assert.notCalled(mockReq.write)
     })
 
-    it.only('sets on error listener', async () => {
-      vimeo.request({ path: '/path' }).catch((error) => {
-        sinon.assert.match(error, 11)
-        console.log('error here', error)
-        // sinon.assert.match(error, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Error Emittedd')))
+    it('calls req.end()', async () => {
+      await vimeo.request({ path: '/path' })
+
+      sinon.assert.calledOnce(mockReq.end)
+    })
+
+    it('sets on error listener', async () => {
+      handleRequestStub.resetBehavior()
+
+      const req = vimeo.request({ path: '/path' }).catch((error) => {
+        sinon.assert.match(error, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Error Emitted')))
       })
-      mockReq.emit('error', 'Error Emitted')
+      mockReq.emit('error', new Error('Error Emitted'))
 
       sinon.assert.calledOnce(mockReq.on)
       sinon.assert.calledWith(mockReq.on, 'error', sinon.match.func)
+
+      return req
     })
 
-    it('calls req.end()', () => {
-      vimeo.request({ path: '/path' }, () => { })
+    it('throws an error when the Promise rejects', async () => {
+      handleRequestStub.resetBehavior()
+      handleRequestStub.callsFake((resolve, reject) => { reject(new Error('Failure.')) })
 
-      sinon.assert.calledOnce(mockReq.end)
+      const error = sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Failure.'))
+
+      await vimeo.request('https://example.com:1234/path').catch((e) => {
+        sinon.assert.match(e, error)
+      })
+
+      sinon.assert.calledOnce(mockHttpsRequest)
+      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ method: 'GET', path: '/path', host: 'example.com', port: '1234' }))
+      sinon.assert.calledOnce(handleRequestStub)
     })
   })
 })
@@ -465,10 +474,6 @@ describe('Vimeo._handleRequest', () => {
     mockRes.on = sinon.fake(mockRes.on)
     mockRes.setEncoding = sinon.fake()
     mockRes.headers = { headers: 'value' }
-  })
-
-  afterEach(() => {
-    sinon.restore()
   })
 
   it('sets the encoding to utf8', () => {
@@ -551,9 +556,6 @@ describe('Vimeo.upload', () => {
     mockCompleteCallback = sinon.fake()
     mockProgressCallback = sinon.fake()
     mockErrorCallback = sinon.fake()
-  })
-  afterEach(() => {
-    sinon.restore()
   })
 
   it('calls the errorCallback if the file is inexistant', () => {
@@ -688,9 +690,6 @@ describe('Vimeo.replace', () => {
     mockCompleteCallback = sinon.fake()
     mockProgressCallback = sinon.fake()
     mockErrorCallback = sinon.fake()
-  })
-  afterEach(() => {
-    sinon.restore()
   })
 
   it('calls the errorCallback if the file is inexistant', () => {
