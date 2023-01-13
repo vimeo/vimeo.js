@@ -220,22 +220,20 @@ describe('Vimeo._applyQuerystringParams', () => {
 
 describe('Vimeo.request', () => {
   const vimeo = new Vimeo('id', 'secret', 'token')
+  let mockHttpRequest, mockHttpsRequest, mockReq, handleRequestStub
+  beforeEach(() => {
+    mockReq = new events.EventEmitter()
+    mockReq.on = sinon.fake(mockReq.on)
+    mockReq.end = sinon.fake()
+    mockReq.write = sinon.fake()
 
-  describe('client.request is called with the expected options', () => {
-    let mockHttpRequest, mockHttpsRequest, mockReq
+    mockHttpRequest = sinon.fake.returns(mockReq)
+    sinon.replace(http, 'request', mockHttpRequest)
+    mockHttpsRequest = sinon.fake.returns(mockReq)
+    sinon.replace(https, 'request', mockHttpsRequest)
+  })
 
-    beforeEach(() => {
-      mockReq = new events.EventEmitter()
-      mockReq.on = sinon.fake(mockReq.on)
-      mockReq.end = sinon.fake()
-      mockReq.write = sinon.fake()
-
-      mockHttpRequest = sinon.fake.returns(mockReq)
-      sinon.replace(http, 'request', mockHttpRequest)
-      mockHttpsRequest = sinon.fake.returns(mockReq)
-      sinon.replace(https, 'request', mockHttpsRequest)
-    })
-
+  describe('callback function is used when passed in', () => {
     it('calls callback with an error if options has no path', () => {
       const mockCallback = sinon.fake()
       vimeo.request({}, mockCallback)
@@ -331,25 +329,9 @@ describe('Vimeo.request', () => {
       sinon.assert.calledOnce(mockReq.end)
     })
   })
-})
 
-describe('Vimeo.request test using Promise', () => {
-  const vimeo = new Vimeo('id', 'secret', 'token')
-
-  describe('client.request is called with the expected options', () => {
-    let mockHttpRequest, mockHttpsRequest, mockReq, handleRequestStub
-
+  describe('a Promise is returned when the callback function is not passed in', () => {
     beforeEach(() => {
-      mockReq = new events.EventEmitter()
-      mockReq.on = sinon.fake(mockReq.on)
-      mockReq.end = sinon.fake()
-      mockReq.write = sinon.fake()
-
-      mockHttpRequest = sinon.fake.returns(mockReq)
-      sinon.replace(http, 'request', mockHttpRequest)
-      mockHttpsRequest = sinon.fake.returns(mockReq)
-      sinon.replace(https, 'request', mockHttpsRequest)
-
       handleRequestStub = sinon.stub(vimeo, '_handleRequest').callsFake((resolve) => { resolve('Success.') })
     })
 
