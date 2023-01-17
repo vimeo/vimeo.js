@@ -522,6 +522,77 @@ describe('Vimeo._handleRequest', () => {
     sinon.assert.calledOnce(mockCallback)
     sinon.assert.calledWith(mockCallback, null, { good: 'json' }, mockRes.statusCode, mockRes.headers)
   })
+
+  describe('when there is a second fn passed in, calls the second fn on error', () => {
+    it('sets the encoding to utf8', () => {
+      const handler = vimeo._handleRequest(() => { }, () => { })
+      handler(mockRes)
+      sinon.assert.calledOnce(mockRes.setEncoding)
+      sinon.assert.calledWith(mockRes.setEncoding, 'utf8')
+    })
+
+    it('calls the second fn with an error if status code >= 400', () => {
+      const mockResolve = sinon.fake()
+      const mockReject = sinon.fake()
+      const handler = vimeo._handleRequest(mockResolve, mockReject)
+
+      mockRes.statusCode = 404
+      handler(mockRes)
+
+      mockRes.emit('end')
+      sinon.assert.calledOnce(mockReject)
+      sinon.assert.calledWith(mockReject, sinon.match.instanceOf(Error), '', mockRes.statusCode, mockRes.headers)
+    })
+
+    it('calls the first fn with no error if status code < 400', () => {
+      const mockResolve = sinon.fake()
+      const mockReject = sinon.fake()
+      const handler = vimeo._handleRequest(mockResolve, mockReject)
+
+      mockRes.statusCode = 200
+      handler(mockRes)
+
+      mockRes.emit('end')
+      sinon.assert.calledOnce(mockResolve)
+      sinon.assert.calledWith(mockResolve, null, {}, mockRes.statusCode, mockRes.headers)
+    })
+
+    it('calls the second fn with an error if the body is not valid JSON', () => {
+      const mockResolve = sinon.fake()
+      const mockReject = sinon.fake()
+      const handler = vimeo._handleRequest(mockResolve, mockReject)
+
+      mockRes.read = sinon.fake.returns('{"bad": "json"')
+
+      mockRes.statusCode = 200
+      handler(mockRes)
+
+      mockRes.emit('readable')
+      mockRes.emit('end')
+      sinon.assert.calledOnce(mockReject)
+      sinon.assert.calledWith(mockReject,
+        sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')),
+        '{"bad": "json"',
+        mockRes.statusCode,
+        mockRes.headers)
+    })
+
+    it('calls the first fn the body parsed as JSON', () => {
+      const mockResolve = sinon.fake()
+      const mockReject = sinon.fake()
+      const handler = vimeo._handleRequest(mockResolve, mockReject)
+
+      mockRes.read = sinon.fake.returns('{"good": "json"}')
+
+      mockRes.statusCode = 200
+      handler(mockRes)
+
+      mockRes.emit('readable')
+      mockRes.emit('end')
+      sinon.assert.calledOnce(mockResolve)
+      sinon.assert.calledWith(mockResolve, null, { good: 'json' }, mockRes.statusCode, mockRes.headers)
+    })
+  })
 })
 
 describe('Vimeo.upload', () => {
