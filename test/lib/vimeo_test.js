@@ -451,6 +451,7 @@ describe('Vimeo._handleRequest', () => {
   const vimeo = new Vimeo('id', 'secret', 'token')
 
   let mockRes
+
   beforeEach(() => {
     mockRes = new events.EventEmitter()
     mockRes.on = sinon.fake(mockRes.on)
@@ -524,6 +525,14 @@ describe('Vimeo._handleRequest', () => {
   })
 
   describe('when there is a second fn passed in, calls the second fn on error', () => {
+    let mockResolve, mockReject, handler
+
+    beforeEach(() => {
+      mockResolve = sinon.fake()
+      mockReject = sinon.fake()
+      handler = vimeo._handleRequest(mockResolve, mockReject)
+    })
+
     it('sets the encoding to utf8', () => {
       const handler = vimeo._handleRequest(() => { }, () => { })
       handler(mockRes)
@@ -532,10 +541,6 @@ describe('Vimeo._handleRequest', () => {
     })
 
     it('calls the second fn with an error if status code >= 400', () => {
-      const mockResolve = sinon.fake()
-      const mockReject = sinon.fake()
-      const handler = vimeo._handleRequest(mockResolve, mockReject)
-
       mockRes.statusCode = 404
       handler(mockRes)
 
@@ -545,10 +550,6 @@ describe('Vimeo._handleRequest', () => {
     })
 
     it('calls the first fn with no error if status code < 400', () => {
-      const mockResolve = sinon.fake()
-      const mockReject = sinon.fake()
-      const handler = vimeo._handleRequest(mockResolve, mockReject)
-
       mockRes.statusCode = 200
       handler(mockRes)
 
@@ -558,10 +559,6 @@ describe('Vimeo._handleRequest', () => {
     })
 
     it('calls the second fn with an error if the body is not valid JSON', () => {
-      const mockResolve = sinon.fake()
-      const mockReject = sinon.fake()
-      const handler = vimeo._handleRequest(mockResolve, mockReject)
-
       mockRes.read = sinon.fake.returns('{"bad": "json"')
 
       mockRes.statusCode = 200
@@ -578,10 +575,6 @@ describe('Vimeo._handleRequest', () => {
     })
 
     it('calls the first fn the body parsed as JSON', () => {
-      const mockResolve = sinon.fake()
-      const mockReject = sinon.fake()
-      const handler = vimeo._handleRequest(mockResolve, mockReject)
-
       mockRes.read = sinon.fake.returns('{"good": "json"}')
 
       mockRes.statusCode = 200
