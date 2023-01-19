@@ -40,7 +40,7 @@ var stateData = {
 // Here we have to build the Vimeo library using the configured `client_id` and `client_secret`. We
 // do not need an access token here because we will generate one. If we already knew our access
 // token, we can provide it as the third parameter.
-var lib = new Vimeo(config.client_id, config.client_secret)
+var lib = new Vimeo(config.client_id, config.client_secret, config.access_token)
 
 var scopes = ['public', 'private', 'edit', 'interact']
 var callbackUrl = 'http://localhost:8080/oauth_callback'

@@ -97,9 +97,9 @@ describe('Vimeo.generateClientCredentials', () => {
   describe('callback is called with the expected parameters', () => {
     it('request returns an error', () => {
       const error = 'Request Error'
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(error, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -110,9 +110,9 @@ describe('Vimeo.generateClientCredentials', () => {
     })
 
     it('request is successful', () => {
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(null, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -159,9 +159,9 @@ describe('Vimeo.accessToken', () => {
   describe('callback is called with the expected parameters', () => {
     it('request returns an error', () => {
       const error = 'Request Error'
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(error, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -172,9 +172,9 @@ describe('Vimeo.accessToken', () => {
     })
 
     it('request is successful', () => {
-      const body = { 'body': 'body' }
-      const status = { 'status': 'status' }
-      const headers = { 'headers': 'headers' }
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
       const mockRequest = sinon.fake.yields(null, body, status, headers)
       sinon.replace(vimeo, 'request', mockRequest)
       const mockCallback = sinon.fake()
@@ -286,11 +286,18 @@ describe('Vimeo.request', () => {
       sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: '{"a":"b"}' }))
     })
 
-    it('sends body as string if content type is not application/json', () => {
-      vimeo.request({ method: 'POST', path: '/path', query: { a: 'b' }, headers: { 'Content-Type': 'not-application/json' } }, () => { })
+    it('sends form data as string if content type is application/x-www-form-urlencoded', () => {
+      vimeo.request({ method: 'POST', path: '/path', query: { a: 'b', c: 'd' }, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }, () => { })
 
       sinon.assert.calledOnce(mockHttpsRequest)
-      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'a=b' }))
+      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'a=b&c=d' }))
+    })
+
+    it('sends body as it is if content type is not application/x-www-form-urlencoded nor application/json', () => {
+      vimeo.request({ method: 'POST', path: '/path', body: 'text', headers: { 'Content-Type': 'text/plain' } }, () => { })
+
+      sinon.assert.calledOnce(mockHttpsRequest)
+      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'text' }))
     })
 
     it('sets the correct body Content-Length', () => {
@@ -348,7 +355,7 @@ describe('Vimeo._handleRequest', () => {
     mockRes = new events.EventEmitter()
     mockRes.on = sinon.fake(mockRes.on)
     mockRes.setEncoding = sinon.fake()
-    mockRes.headers = { 'headers': 'value' }
+    mockRes.headers = { headers: 'value' }
   })
 
   afterEach(() => {
@@ -398,7 +405,7 @@ describe('Vimeo._handleRequest', () => {
     mockRes.emit('readable')
     mockRes.emit('end')
     sinon.assert.calledOnce(mockCallback)
-    sinon.assert.calledWith(mockCallback, '{"bad": "json"', '{"bad": "json"', mockRes.statusCode, mockRes.headers)
+    sinon.assert.calledWith(mockCallback, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')), '{"bad": "json"', mockRes.statusCode, mockRes.headers)
   })
 
   it('calls callback the body parsed as JSON', () => {
