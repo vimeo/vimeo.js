@@ -31,7 +31,6 @@
   "scripts": {
     "standard": "standard index.js lib/*.js example/*.js test/**/*.js",
     "mocha": "nyc mocha --recursive --reporter landing --timeout=3000",
-    "mocha-verbose": "nyc mocha --recursive --timeout=3000",
     "test": "npm run standard && npm run mocha",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }

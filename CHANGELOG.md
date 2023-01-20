@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.3.1] - 2023-01-20
+## Changed
+- Changelog ([#165](https://github.com/vimeo/vimeo.js/pull/165))
+- package.json ([#165](https://github.com/vimeo/vimeo.js/pull/165))
+
+## [2.3.0] - 2023-01-19
+## Added
+- Allows the body value included in the request options to be used as the request body, if the content type is not application/x-www-form-urlencoded nor application/json ([#163](https://github.com/vimeo/vimeo.js/pull/163))
+- Adds an example for text track upload ([#163](https://github.com/vimeo/vimeo.js/pull/163))
+
+## [2.2.0] - 2022-07-21
+## Fixed
+- Fixes an issue where the error is not passed to one of the callbacks ([#155](https://github.com/vimeo/vimeo.js/pull/155))
+
 ## [2.1.1] - 2018-11-09
 ## Added
 - Upload and replace methods now support file blogs. ([#86](https://github.com/vimeo/vimeo.js/pull/86), [@nicolastakashi](https://github.com/nicolastakashi))
@@ -52,6 +66,9 @@
 ### Added
 - First release.
 
+[2.3.1]: https://github.com/vimeo/vimeo.js/compare/2.3.0...2.3.1
+[2.3.0]: https://github.com/vimeo/vimeo.js/compare/2.2.0...2.3.0
+[2.2.0]: https://github.com/vimeo/vimeo.js/compare/2.1.1...2.2.0
 [2.1.1]: https://github.com/vimeo/vimeo.js/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/vimeo/vimeo.js/compare/2.0.2...2.1.0
 [2.0.2]: https://github.com/vimeo/vimeo.js/compare/2.0.1...2.0.2
