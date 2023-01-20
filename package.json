@@ -1,6 +1,6 @@
 {
   "name": "vimeo",
-  "version": "2.1.1",
+  "version": "2.3.1",
   "license": "Apache-2.0",
   "description": "A Node.js library for the new Vimeo API.",
   "homepage": "https://developer.vimeo.com/",
@@ -31,6 +31,7 @@
   "scripts": {
     "standard": "standard index.js lib/*.js example/*.js test/**/*.js",
     "mocha": "nyc mocha --recursive --reporter landing --timeout=3000",
+    "mocha-verbose": "nyc mocha --recursive --timeout=3000",
     "test": "npm run standard && npm run mocha",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   }
