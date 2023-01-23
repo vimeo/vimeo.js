@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.3.2] - 2023-01-23
+## Changed
+- package.json ([#166](https://github.com/vimeo/vimeo.js/pull/166))
+
 ## [2.3.1] - 2023-01-20
 ## Changed
 - Changelog ([#165](https://github.com/vimeo/vimeo.js/pull/165))
