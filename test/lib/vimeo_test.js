@@ -277,11 +277,18 @@ describe('Vimeo.request', () => {
       sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: '{"a":"b"}' }))
     })
 
-    it('sends body as string if content type is not application/json', () => {
-      vimeo.request({ method: 'POST', path: '/path', query: { a: 'b' }, headers: { 'Content-Type': 'not-application/json' } }, () => { })
+    it('sends form data as string if content type is application/x-www-form-urlencoded', () => {
+      vimeo.request({ method: 'POST', path: '/path', query: { a: 'b', c: 'd' }, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }, () => { })
 
       sinon.assert.calledOnce(mockHttpsRequest)
-      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'a=b' }))
+      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'a=b&c=d' }))
+    })
+
+    it('sends body as it is if content type is not application/x-www-form-urlencoded nor application/json', () => {
+      vimeo.request({ method: 'POST', path: '/path', body: 'text', headers: { 'Content-Type': 'text/plain' } }, () => { })
+
+      sinon.assert.calledOnce(mockHttpsRequest)
+      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'text' }))
     })
 
     it('sets the correct body Content-Length', () => {
@@ -376,11 +383,18 @@ describe('Vimeo.request', () => {
       sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: '{"a":"b"}' }))
     })
 
-    it('sends body as string if content type is not application/json', async () => {
-      await vimeo.request({ method: 'POST', path: '/path', query: { a: 'b' }, headers: { 'Content-Type': 'not-application/json' } })
+    it('sends form data as string if content type is application/x-www-form-urlencoded', async () => {
+      await vimeo.request({ method: 'POST', path: '/path', query: { a: 'b', c: 'd' }, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
 
       sinon.assert.calledOnce(mockHttpsRequest)
-      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'a=b' }))
+      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'a=b&c=d' }))
+    })
+
+    it('sends body as it is if content type is not application/x-www-form-urlencoded nor application/json', async () => {
+      await vimeo.request({ method: 'POST', path: '/path', body: 'text', headers: { 'Content-Type': 'text/plain' } })
+
+      sinon.assert.calledOnce(mockHttpsRequest)
+      sinon.assert.calledWith(mockHttpsRequest, sinon.match({ body: 'text' }))
     })
 
     it('sets the correct body Content-Length', async () => {

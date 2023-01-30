@@ -1,22 +1,22 @@
 {
-  "name": "vimeo",
-  "version": "2.1.1",
+  "name": "@vimeo/vimeo",
+  "version": "2.3.2",
   "license": "Apache-2.0",
   "description": "A Node.js library for the new Vimeo API.",
   "homepage": "https://developer.vimeo.com/",
   "main": "index.js",
   "directories": {
-    "example": "example/",
-    "lib": "lib/"
+    "example": "example",
+    "lib": "lib",
+    "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vimeo/vimeo.js"
+    "url": "git+https://github.com/vimeo/vimeo.js.git"
   },
   "keywords": [
     "vimeo"
   ],
-  "readmeFilename": "README.md",
   "dependencies": {
     "tus-js-client": "^1.5.1"
   },
@@ -35,5 +35,8 @@
     "test": "npm run standard && npm run mocha",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "prepare": "husky install"
+  },
+  "bugs": {
+    "url": "https://github.com/vimeo/vimeo.js/issues"
   }
 }
