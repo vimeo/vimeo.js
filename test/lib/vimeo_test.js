@@ -133,7 +133,7 @@ describe('Vimeo.accessToken', () => {
     const mockRequest = sinon.fake()
     sinon.replace(vimeo, 'request', mockRequest)
 
-    vimeo.accessToken(CODE, REDIRECT_URI)
+    vimeo.accessToken(CODE, REDIRECT_URI, () => {})
 
     const expectedPayload = {
       method: 'POST',
@@ -166,18 +166,52 @@ describe('Vimeo.accessToken', () => {
       sinon.assert.calledOnce(mockCallback)
       sinon.assert.calledWith(mockCallback, error, null, status, headers)
     })
+  })
 
-    it('request is successful', () => {
-      const body = { body: 'body' }
-      const status = { status: 'status' }
-      const headers = { headers: 'headers' }
-      const mockRequest = sinon.fake.yields(null, body, status, headers)
-      sinon.replace(vimeo, 'request', mockRequest)
-      const mockCallback = sinon.fake()
+  describe('request and response are expected for the Promise implementation', () => {
+    it('vimeo.request is called with the expected parameters', async () => {
+      const requestStub = sinon.stub(vimeo, 'request').resolves('Success.')
 
-      vimeo.accessToken(CODE, REDIRECT_URI, mockCallback)
-      sinon.assert.calledOnce(mockCallback)
-      sinon.assert.calledWith(mockCallback, null, body, status, headers)
+      await vimeo.accessToken(CODE, REDIRECT_URI)
+
+      const expectedPayload = {
+        method: 'POST',
+        hostname: requestDefaults.hostname,
+        path: authEndpoints.accessToken,
+        query: {
+          grant_type: 'authorization_code',
+          code: CODE,
+          redirect_uri: REDIRECT_URI
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+      sinon.assert.calledOnce(requestStub)
+      sinon.assert.calledWith(requestStub, sinon.match(expectedPayload))
+    })
+
+    it('returns expected error response when the request fails', async () => {
+      const err = new Error('Request Error')
+
+      sinon.stub(vimeo, 'request').rejects(err)
+      await vimeo.accessToken(CODE, REDIRECT_URI).catch((error) => {
+        sinon.assert.match(error, err)
+      })
+    })
+
+    it('returns the expected response when the request is successful', async () => {
+      const resObject = {
+        body: 'body',
+        status: 'status',
+        headers: 'headers'
+      }
+
+      sinon.stub(vimeo, 'request').resolves({ ...resObject, error: null, hi: 'test' })
+
+      await vimeo.accessToken(CODE, REDIRECT_URI).then((res) => {
+        sinon.assert.match(res, resObject)
+      })
     })
   })
 })
@@ -430,6 +464,24 @@ describe('Vimeo.request', () => {
       sinon.assert.calledOnce(mockReq.end)
     })
 
+    it('returns the correct response when the Promise is fullfilled', async () => {
+      const req = await vimeo.request({ method: 'POST', path: '/path' })
+      expect(req).to.equal('Success.')
+    })
+
+    it('returns the correct response when the Promise is rejected', async () => {
+      handleRequestStub.resetBehavior()
+
+      const err = new Error('Request Error')
+      handleRequestStub.callsFake((resolve, reject) => {
+        reject(err)
+      })
+
+      await vimeo.request({ method: 'POST', path: '/path' }).catch((e) => {
+        expect(e).to.equal(err)
+      })
+    })
+
     it('sets on error listener', async () => {
       handleRequestStub.resetBehavior()
 
@@ -560,7 +612,7 @@ describe('Vimeo._handleRequest', () => {
 
       mockRes.emit('end')
       sinon.assert.calledOnce(mockReject)
-      sinon.assert.calledWith(mockReject, sinon.match.instanceOf(Error), '', mockRes.statusCode, mockRes.headers)
+      sinon.assert.calledWith(mockReject, sinon.match.instanceOf(Error))
     })
 
     it('calls the first fn with no error if status code < 400', () => {
@@ -569,7 +621,7 @@ describe('Vimeo._handleRequest', () => {
 
       mockRes.emit('end')
       sinon.assert.calledOnce(mockResolve)
-      sinon.assert.calledWith(mockResolve, null, {}, mockRes.statusCode, mockRes.headers)
+      sinon.assert.calledWith(mockResolve, {})
     })
 
     it('calls the second fn with an error if the body is not valid JSON', () => {
@@ -581,14 +633,10 @@ describe('Vimeo._handleRequest', () => {
       mockRes.emit('readable')
       mockRes.emit('end')
       sinon.assert.calledOnce(mockReject)
-      sinon.assert.calledWith(mockReject,
-        sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')),
-        '{"bad": "json"',
-        mockRes.statusCode,
-        mockRes.headers)
+      sinon.assert.calledWith(mockReject, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')))
     })
 
-    it('calls the first fn the body parsed as JSON', () => {
+    it('calls the first fn if the body parsed as JSON', () => {
       mockRes.read = sinon.fake.returns('{"good": "json"}')
 
       mockRes.statusCode = 200
@@ -597,7 +645,7 @@ describe('Vimeo._handleRequest', () => {
       mockRes.emit('readable')
       mockRes.emit('end')
       sinon.assert.calledOnce(mockResolve)
-      sinon.assert.calledWith(mockResolve, null, { good: 'json' }, mockRes.statusCode, mockRes.headers)
+      sinon.assert.calledWith(mockResolve, { good: 'json' })
     })
   })
 })
