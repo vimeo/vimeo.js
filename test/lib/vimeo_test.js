@@ -568,11 +568,7 @@ describe('Vimeo._handleRequest', () => {
     mockRes.emit('readable')
     mockRes.emit('end')
     sinon.assert.calledOnce(mockCallback)
-    sinon.assert.calledWith(mockCallback,
-      sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')),
-      '{"bad": "json"',
-      mockRes.statusCode,
-      mockRes.headers)
+    sinon.assert.calledWith(mockCallback, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')), '{"bad": "json"', mockRes.statusCode, mockRes.headers)
   })
 
   it('calls callback the body parsed as JSON', () => {
