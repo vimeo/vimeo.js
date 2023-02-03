@@ -166,6 +166,19 @@ describe('Vimeo.accessToken', () => {
       sinon.assert.calledOnce(mockCallback)
       sinon.assert.calledWith(mockCallback, error, null, status, headers)
     })
+
+    it('request is successful', () => {
+      const body = { body: 'body' }
+      const status = { status: 'status' }
+      const headers = { headers: 'headers' }
+      const mockRequest = sinon.fake.yields(null, body, status, headers)
+      sinon.replace(vimeo, 'request', mockRequest)
+      const mockCallback = sinon.fake()
+
+      vimeo.accessToken(CODE, REDIRECT_URI, mockCallback)
+      sinon.assert.calledOnce(mockCallback)
+      sinon.assert.calledWith(mockCallback, null, body, status, headers)
+    })
   })
 
   describe('request and response are expected for the Promise implementation', () => {
@@ -564,11 +577,7 @@ describe('Vimeo._handleRequest', () => {
     mockRes.emit('readable')
     mockRes.emit('end')
     sinon.assert.calledOnce(mockCallback)
-    sinon.assert.calledWith(mockCallback,
-      sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')),
-      '{"bad": "json"',
-      mockRes.statusCode,
-      mockRes.headers)
+    sinon.assert.calledWith(mockCallback, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')))
   })
 
   it('calls callback the body parsed as JSON', () => {
@@ -629,7 +638,11 @@ describe('Vimeo._handleRequest', () => {
       mockRes.emit('readable')
       mockRes.emit('end')
       sinon.assert.calledOnce(mockReject)
-      sinon.assert.calledWith(mockReject, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')))
+      sinon.assert.calledWith(mockReject,
+        sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unexpected end of JSON input')),
+        '{"bad": "json"',
+        mockRes.statusCode,
+        mockRes.headers)
     })
 
     it('calls the first fn if the body parsed as JSON', () => {
