@@ -60,7 +60,7 @@ function makeRequest (lib) {
   })
 }
 
-const lib = new Vimeo(config.client_id, config.client_secret)
+const lib = new Vimeo(config.client_id, config.client_secret, config.access_token)
 
 if (config.access_token) {
   lib.setAccessToken(config.access_token)
