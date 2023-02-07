@@ -58,25 +58,25 @@ describe('Vimeo.generateClientCredentials', () => {
     })
 
     it('with `public` scope by default', () => {
-      vimeo.generateClientCredentials()
+      vimeo.generateClientCredentials(null, () => {})
       sinon.assert.calledOnce(mockRequest)
       sinon.assert.calledWith(mockRequest, sinon.match({ query: sinon.match.has('scope', 'public') }))
     })
 
     it('with a space-separated list for scopes', () => {
-      vimeo.generateClientCredentials(['scope1', 'scope2'])
+      vimeo.generateClientCredentials(['scope1', 'scope2'], () => {})
       sinon.assert.calledOnce(mockRequest)
       sinon.assert.calledWith(mockRequest, sinon.match({ query: sinon.match.has('scope', 'scope1 scope2') }))
     })
 
     it('with a space-separated list for scopes', () => {
-      vimeo.generateClientCredentials('scope1 scope2')
+      vimeo.generateClientCredentials('scope1 scope2', () => {})
       sinon.assert.calledOnce(mockRequest)
       sinon.assert.calledWith(mockRequest, sinon.match({ query: sinon.match.has('scope', 'scope1 scope2') }))
     })
 
     it('with all defaults', () => {
-      vimeo.generateClientCredentials()
+      vimeo.generateClientCredentials(null, () => {})
 
       const expectedPayload = {
         method: 'POST',
@@ -91,6 +91,49 @@ describe('Vimeo.generateClientCredentials', () => {
       }
       sinon.assert.calledOnce(mockRequest)
       sinon.assert.calledWith(mockRequest, sinon.match(expectedPayload))
+    })
+  })
+
+  describe('request is called with the expected parameters for the promise implementation', () => {
+    let requestStub
+    beforeEach(() => {
+      requestStub = sinon.stub(vimeo, 'request').resolves('Success.')
+    })
+
+    it('with `public` scope by default', async () => {
+      await vimeo.generateClientCredentials()
+      sinon.assert.calledOnce(requestStub)
+      sinon.assert.calledWith(requestStub, sinon.match({ query: sinon.match.has('scope', 'public') }))
+    })
+
+    it('with a space-separated list for scopes', async () => {
+      await vimeo.generateClientCredentials(['scope1', 'scope2'])
+      sinon.assert.calledOnce(requestStub)
+      sinon.assert.calledWith(requestStub, sinon.match({ query: sinon.match.has('scope', 'scope1 scope2') }))
+    })
+
+    it('with a space-separated list for scopes', async () => {
+      await vimeo.generateClientCredentials('scope1 scope2')
+      sinon.assert.calledOnce(requestStub)
+      sinon.assert.calledWith(requestStub, sinon.match({ query: sinon.match.has('scope', 'scope1 scope2') }))
+    })
+
+    it('with all defaults', async () => {
+      await vimeo.generateClientCredentials()
+
+      const expectedPayload = {
+        method: 'POST',
+        hostname: requestDefaults.hostname,
+        path: authEndpoints.clientCredentials,
+        query: {
+          grant_type: 'client_credentials'
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+      sinon.assert.calledOnce(requestStub)
+      sinon.assert.calledWith(requestStub, sinon.match(expectedPayload))
     })
   })
 
@@ -120,6 +163,22 @@ describe('Vimeo.generateClientCredentials', () => {
       vimeo.generateClientCredentials('scope', mockCallback)
       sinon.assert.calledOnce(mockCallback)
       sinon.assert.calledWith(mockCallback, null, body, status, headers)
+    })
+  })
+
+  describe('a Promise is returned with the expected response or error when the callback is not passed in', () => {
+    it('request returns an error', async () => {
+      const error = 'Request Error'
+      sinon.stub(vimeo, 'request').resolves(error)
+
+      await vimeo.generateClientCredentials('scope').catch(err => sinon.assert.match(err, error))
+    })
+
+    it('request is successful', async () => {
+      const body = 'body'
+      sinon.stub(vimeo, 'request').resolves(body)
+
+      await vimeo.generateClientCredentials('scope').then(res => sinon.assert.match(res, body))
     })
   })
 })
