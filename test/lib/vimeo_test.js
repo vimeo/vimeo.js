@@ -168,8 +168,8 @@ describe('Vimeo.generateClientCredentials', () => {
 
   describe('a Promise is returned with the expected response or error when the callback is not passed in', () => {
     it('request returns an error', async () => {
-      const error = 'Request Error'
-      sinon.stub(vimeo, 'request').resolves(error)
+      const error = new Error('Request Error')
+      sinon.stub(vimeo, 'request').rejects(error)
 
       await vimeo.generateClientCredentials('scope').catch(err => sinon.assert.match(err, error))
     })
