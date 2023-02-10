@@ -42,7 +42,7 @@ describe('Vimeo.upload using the Promise API', () => {
     let mockTusUpload
     beforeEach(() => {
       const mockFs = sinon.fake.returns({ size: FILE_SIZE })
-      mockTusUpload = sinon.stub(vimeo, '_performTusUpload').callsFake((files, size, attempt, completeCallback, progressCallback, errorCallback) => completeCallback('uri'))
+      mockTusUpload = sinon.stub(vimeo, '_performTusUpload').callsFake((files, size, attempt, onComplete, onProgress, onError) => onComplete('uri'))
       sinon.replace(fs, 'statSync', mockFs)
     })
 
@@ -80,7 +80,7 @@ describe('Vimeo.upload using the Promise API', () => {
       sinon.assert.calledWith(requestStub, expectedPayload)
     })
 
-    it('calls the errorCallback if request returned an error', async () => {
+    it('calls the onError if request returned an error', async () => {
       const error = new Error('Request Error')
       requestStub.rejects(error)
 
@@ -108,7 +108,7 @@ describe('Vimeo.upload using the Promise API', () => {
     it('returns error when upload fails', async () => {
       const error = new Error('Upload Error')
       mockTusUpload.resetBehavior()
-      mockTusUpload.callsFake((files, size, attempt, completeCallback, progressCallback, errorCallback) => errorCallback(error))
+      mockTusUpload.callsFake((files, size, attempt, onComplete, onProgress, onError) => onError(error))
       await vimeo.upload(FILE_NAME, mockProgressCallback).catch((err) => {
         sinon.assert.match(err, error)
       })
@@ -116,10 +116,10 @@ describe('Vimeo.upload using the Promise API', () => {
 
     it('sents progress through the progressCallback during upload', async () => {
       mockTusUpload.resetBehavior()
-      mockTusUpload.callsFake((files, size, attempt, completeCallback, progressCallback, errorCallback) => {
-        progressCallback('bytesUploaded', 'bytesTotal')
-        progressCallback('bytesUploaded2', 'bytesTotal2')
-        completeCallback()
+      mockTusUpload.callsFake((files, size, attempt, onComplete, onProgress, onError) => {
+        onProgress('bytesUploaded', 'bytesTotal')
+        onProgress('bytesUploaded2', 'bytesTotal2')
+        onComplete()
       })
       await vimeo.upload(FILE_NAME, mockProgressCallback)
       sinon.assert.calledTwice(mockProgressCallback)
