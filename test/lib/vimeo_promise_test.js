@@ -128,3 +128,124 @@ describe('Vimeo.upload using the Promise API', () => {
     })
   })
 })
+
+describe('Vimeo.replace using the Promise API', () => {
+  const FILE_NAME = '/real/file/name'
+  const FILE_SIZE = 24601
+  const VIDEO_URI = '/videos/123456789'
+  const vimeo = new Vimeo('id', 'secret', 'token')
+  const attempt = { upload: { upload_link: 'body' } }
+  let requestStub
+  let mockProgressCallback
+
+  beforeEach(() => {
+    requestStub = sinon.stub(vimeo, 'request').resolves(attempt)
+    mockProgressCallback = sinon.fake()
+  })
+
+  it('throws an error if the file is inexistant', async () => {
+    const error = new Error('File Error')
+    const errFs = sinon.fake.throws(error)
+    sinon.replace(fs, 'statSync', errFs)
+
+    const vimeo = new Vimeo('id', 'secret', 'token')
+    await vimeo.replace(FILE_NAME, VIDEO_URI, {}).catch(err => {
+      sinon.assert.match(err, error)
+    })
+  })
+
+  it('throws an error if the file parameter is an object', async () => {
+    const fileObject = { size: 123, name: 'name' }
+    await vimeo.replace(fileObject, VIDEO_URI, {}).catch(err => sinon.assert.match(err, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Please pass in a valid file path.'))))
+  })
+
+  describe('file exists', () => {
+    let mockTusUpload
+    beforeEach(() => {
+      const mockFs = sinon.fake.returns({ size: FILE_SIZE })
+      mockTusUpload = sinon.stub(vimeo, '_performTusUpload').callsFake((files, size, attempt, onComplete, onProgress, onError) => onComplete('uri'))
+      sinon.replace(fs, 'statSync', mockFs)
+    })
+
+    describe('always uses `tus` to upload', () => {
+      it('if upload.approach is not specified', async () => {
+        await vimeo.replace(FILE_NAME, VIDEO_URI, {})
+
+        sinon.assert.calledOnce(requestStub)
+        const expectedPayload = {
+          query: { upload: { approach: 'tus' } }
+        }
+        sinon.assert.calledWith(requestStub, sinon.match(expectedPayload))
+      })
+
+      it('if upload.approach is not tus', async () => {
+        await vimeo.replace(FILE_NAME, VIDEO_URI, { upload: { approach: 'not-tus' } })
+
+        sinon.assert.calledOnce(requestStub)
+        const expectedPayload = {
+          query: { upload: { approach: 'tus' } }
+        }
+        sinon.assert.calledWith(requestStub, sinon.match(expectedPayload))
+      })
+    })
+
+    it('request is called with the expected parameters', async () => {
+      await vimeo.replace(FILE_NAME, VIDEO_URI, {})
+
+      sinon.assert.calledOnce(requestStub)
+      const expectedPayload = {
+        method: 'POST',
+        path: VIDEO_URI + '/versions?fields=upload',
+        query: { file_name: 'name', upload: { approach: 'tus', size: FILE_SIZE } }
+      }
+      sinon.assert.calledWith(requestStub, expectedPayload)
+    })
+
+    it('calls the onError if request returned an error', async () => {
+      const error = new Error('Request Error')
+      requestStub.rejects(error)
+
+      await vimeo.replace(FILE_NAME, VIDEO_URI, {}).catch(err => sinon.assert.match(err, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Unable to initiate an upload. [Request Error]'))))
+    })
+
+    it('calls _performTusUpload with the expected parameters', async () => {
+      await vimeo.replace(FILE_NAME, VIDEO_URI, {}, mockProgressCallback)
+
+      sinon.assert.calledOnce(mockTusUpload)
+      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
+    })
+
+    it('shifts callbacks if param is not passed to the function', async () => {
+      await vimeo.replace(FILE_NAME, VIDEO_URI, mockProgressCallback)
+
+      sinon.assert.calledOnce(mockTusUpload)
+      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
+    })
+
+    it('returns uri when upload completes', async () => {
+      await vimeo.replace(FILE_NAME, VIDEO_URI, mockProgressCallback).then((res) => sinon.assert.match(res, 'uri'))
+    })
+
+    it('returns error when replace fails', async () => {
+      const error = new Error('Replace Error')
+      mockTusUpload.resetBehavior()
+      mockTusUpload.callsFake((files, size, attempt, onComplete, onProgress, onError) => onError(error))
+      await vimeo.replace(FILE_NAME, VIDEO_URI, mockProgressCallback).catch((err) => {
+        sinon.assert.match(err, error)
+      })
+    })
+
+    it('sents progress through the progressCallback during upload', async () => {
+      mockTusUpload.resetBehavior()
+      mockTusUpload.callsFake((files, size, attempt, onComplete, onProgress, onError) => {
+        onProgress('bytesUploaded', 'bytesTotal')
+        onProgress('bytesUploaded2', 'bytesTotal2')
+        onComplete()
+      })
+      await vimeo.replace(FILE_NAME, VIDEO_URI, mockProgressCallback)
+      sinon.assert.calledTwice(mockProgressCallback)
+      sinon.assert.calledWith(mockProgressCallback.getCall(0), 'bytesUploaded', 'bytesTotal')
+      sinon.assert.calledWith(mockProgressCallback.getCall(1), 'bytesUploaded2', 'bytesTotal2')
+    })
+  })
+})

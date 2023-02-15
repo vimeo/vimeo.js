@@ -868,25 +868,14 @@ describe('Vimeo.replace', () => {
     sinon.assert.calledWith(mockErrorCallback, 'Unable to locate file to upload.')
   })
 
-  describe('file parameter is an object', () => {
-    it('request is called with the expected parameters', () => {
-      const mockRequest = sinon.fake()
-      sinon.replace(vimeo, 'request', mockRequest)
+  it('calls the errorCallback if the file parameter is an object', () => {
+    const fileObject = {
+      size: FILE_SIZE
+    }
+    vimeo.replace(fileObject, VIDEO_URI, {}, mockCompleteCallback, mockProgressCallback, mockErrorCallback)
 
-      const fileObject = {
-        size: FILE_SIZE,
-        name: 'name'
-      }
-      vimeo.replace(fileObject, VIDEO_URI, {}, mockCompleteCallback, mockProgressCallback, mockErrorCallback)
-
-      sinon.assert.calledOnce(mockRequest)
-      const expectedPayload = {
-        method: 'POST',
-        path: VIDEO_URI + '/versions?fields=upload',
-        query: { file_name: 'name', upload: { approach: 'tus', size: FILE_SIZE } }
-      }
-      sinon.assert.calledWith(mockRequest, expectedPayload)
-    })
+    sinon.assert.calledOnce(mockErrorCallback)
+    sinon.assert.calledWith(mockErrorCallback, sinon.match.instanceOf(Error).and(sinon.match.has('message', 'Please pass in a valid file path.')))
   })
 
   describe('file exists', () => {
