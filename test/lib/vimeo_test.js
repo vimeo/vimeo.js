@@ -685,7 +685,7 @@ describe('Vimeo._handleRequest', () => {
 
       mockRes.emit('end')
       sinon.assert.calledOnce(mockResolve)
-      sinon.assert.calledWith(mockResolve, {})
+      sinon.assert.calledWith(mockResolve, { body: {}, headers: mockRes.headers, statusCode: mockRes.statusCode })
     })
 
     it('calls the second fn with an error if the body is not valid JSON', () => {
@@ -713,7 +713,7 @@ describe('Vimeo._handleRequest', () => {
       mockRes.emit('readable')
       mockRes.emit('end')
       sinon.assert.calledOnce(mockResolve)
-      sinon.assert.calledWith(mockResolve, { good: 'json' })
+      sinon.assert.calledWith(mockResolve, { body: { good: 'json' }, headers: mockRes.headers, statusCode: mockRes.statusCode })
     })
   })
 })

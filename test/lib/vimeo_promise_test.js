@@ -13,7 +13,7 @@ describe('Vimeo.upload using the Promise API', () => {
   const FILE_NAME = '/real/file'
   const FILE_SIZE = 24601
   const vimeo = new Vimeo('id', 'secret', 'token')
-  const attempt = { upload: { upload_link: 'body' }, uri: 'uri' }
+  const attempt = { body: { upload: { upload_link: 'body' }, uri: 'uri' } }
   let requestStub
   let mockProgressCallback
 
@@ -91,14 +91,14 @@ describe('Vimeo.upload using the Promise API', () => {
       await vimeo.upload(FILE_NAME, {}, mockProgressCallback)
 
       sinon.assert.calledOnce(mockTusUpload)
-      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
+      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt.body, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
     })
 
     it('shifts callbacks if param is not passed to the function', async () => {
       await vimeo.upload(FILE_NAME, mockProgressCallback)
 
       sinon.assert.calledOnce(mockTusUpload)
-      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
+      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt.body, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
     })
 
     it('returns uri when upload completes', async () => {
@@ -212,14 +212,14 @@ describe('Vimeo.replace using the Promise API', () => {
       await vimeo.replace(FILE_NAME, VIDEO_URI, {}, mockProgressCallback)
 
       sinon.assert.calledOnce(mockTusUpload)
-      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
+      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt.body, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
     })
 
     it('shifts callbacks if param is not passed to the function', async () => {
       await vimeo.replace(FILE_NAME, VIDEO_URI, mockProgressCallback)
 
       sinon.assert.calledOnce(mockTusUpload)
-      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
+      sinon.assert.calledWith(mockTusUpload, FILE_NAME, FILE_SIZE, attempt.body, sinon.match.typeOf('function'), mockProgressCallback, sinon.match.typeOf('function'))
     })
 
     it('returns uri when upload completes', async () => {
