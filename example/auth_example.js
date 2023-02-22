@@ -16,11 +16,12 @@
  *   limitations under the License.
  */
 
-var Vimeo = require('../index').Vimeo
-var utilModule = require('util')
+const Vimeo = require('../index').Vimeo
+const utilModule = require('util')
+let config = {}
 
 try {
-  var config = require('./config.json')
+  config = require('./config.json')
 } catch (error) {
   console.error('ERROR: For this example to run properly you must create an API app at ' +
     'https://developer.vimeo.com/apps/new and set your callback url to ' +
@@ -30,25 +31,25 @@ try {
   process.exit()
 }
 
-var httpModule = require('http')
-var urlModule = require('url')
+const httpModule = require('http')
+const urlModule = require('url')
 
-var stateData = {
+const stateData = {
   state: 'unauthorized'
 }
 
 // Here we have to build the Vimeo library using the configured `client_id` and `client_secret`. We
 // do not need an access token here because we will generate one. If we already knew our access
 // token, we can provide it as the third parameter.
-var lib = new Vimeo(config.client_id, config.client_secret, config.access_token)
+const lib = new Vimeo(config.client_id, config.client_secret, config.access_token)
 
-var scopes = ['public', 'private', 'edit', 'interact']
-var callbackUrl = 'http://localhost:8080/oauth_callback'
+const scopes = ['public', 'private', 'edit', 'interact']
+const callbackUrl = 'http://localhost:8080/oauth_callback'
 
 // The authorization process requires the user to be redirected back to a webpage, so we can start
 // up a simple HTTP server here.
-var server = httpModule.createServer(function (request, response) {
-  var url = urlModule.parse(request.url, true)
+const server = httpModule.createServer(function (request, response) {
+  const url = urlModule.parse(request.url, true) // eslint-disable-line n/no-deprecated-api
 
   // Once the user accepts your app, they will be redirected back to
   // `http://localhost:8080/oauth_callback`. If they are not redirected you should check your apps
@@ -121,7 +122,7 @@ server.listen(8080, function () {
   console.log('Server started on 8080. Open up http://localhost:8080 in your browser.')
 })
 
-var context = require('repl').start({}).context
+const context = require('repl').start({}).context
 
 /**
  * This will upload the video to the authenticated account.

@@ -6,6 +6,7 @@ lib-cov
 *.out
 *.pid
 *.gz
+*.lcov
 
 pids
 logs
@@ -16,3 +17,5 @@ node_modules
 package-lock.json
 
 example/config.json
+.nyc_output/
+.husky/
