@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.0] - 2023-02-22
+## Added
+- Adds Promise API ([#174](https://github.com/vimeo/vimeo.js/pull/174))
+
 ## [2.3.2] - 2023-01-23
 ## Changed
 - package.json ([#166](https://github.com/vimeo/vimeo.js/pull/166))
@@ -70,6 +74,7 @@
 ### Added
 - First release.
 
+[3.0.0]: https://github.com/vimeo/vimeo.js/compare/2.3.1...3.0.0
 [2.3.1]: https://github.com/vimeo/vimeo.js/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/vimeo/vimeo.js/compare/2.2.0...2.3.0
 [2.2.0]: https://github.com/vimeo/vimeo.js/compare/2.1.1...2.2.0

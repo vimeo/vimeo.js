@@ -16,10 +16,11 @@
  *   limitations under the License.
  */
 
-var Vimeo = require('../index').Vimeo
+const Vimeo = require('../index').Vimeo
+let config = {}
 
 try {
-  var config = require('./config.json')
+  config = require('./config.json')
 } catch (error) {
   console.error('ERROR: For this example to run properly you must create an API app at ' +
     'https://developer.vimeo.com/apps/new and set your callback url to ' +
@@ -34,16 +35,16 @@ if (!config.access_token) {
 }
 
 // Instantiate the library with your client id, secret and access token (pulled from dev site)
-var client = new Vimeo(config.client_id, config.client_secret, config.access_token)
+const client = new Vimeo(config.client_id, config.client_secret, config.access_token)
 
 // Create a variable with a hard coded path to your file system
-var filePath = '<full path to a video on the filesystem>'
+const filePath = '<full path to a video on the filesystem>'
 
 console.log('Uploading: ' + filePath)
 
-var params = {
-  'name': 'Vimeo API SDK test upload',
-  'description': "This video was uploaded through the Vimeo API's NodeJS SDK."
+const params = {
+  name: 'Vimeo API SDK test upload',
+  description: "This video was uploaded through the Vimeo API's NodeJS SDK."
 }
 
 client.upload(
@@ -65,8 +66,8 @@ client.upload(
         method: 'PATCH',
         path: uri,
         params: {
-          'name': 'Vimeo API SDK test edit',
-          'description': "This video was edited through the Vimeo API's NodeJS SDK."
+          name: 'Vimeo API SDK test edit',
+          description: "This video was edited through the Vimeo API's NodeJS SDK."
         }
       }, function (error, body, statusCode, headers) {
         if (error) {
@@ -94,7 +95,7 @@ client.upload(
     })
   },
   function (bytesUploaded, bytesTotal) {
-    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+    const percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
     console.log(bytesUploaded, bytesTotal, percentage + '%')
   },
   function (error) {
