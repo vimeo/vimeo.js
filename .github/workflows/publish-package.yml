@@ -1,6 +1,6 @@
 name: Publish Package
 
-on: pull_request
+on: workflow_dispatch
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
           node-version: 14
           # Setup .npmrc file to publish to npm
           registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
+      - run: npm i
       - run: npm publish --access public --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_VIMEO_PUBLISH_TOKEN }}
