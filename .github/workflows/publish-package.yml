@@ -1,6 +1,6 @@
 name: Publish Package
 
-on: workflow_dispatch
+on: pull_request
 
 jobs:
   build:
