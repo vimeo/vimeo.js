@@ -13,8 +13,7 @@ If you’re new to Vimeo APIs, check out [Getting Started: The Basics](https://d
 ## Install the Node.js library
 To install Node.js, run the following command: 
 
-     npm install @vimeo/vimeo # for the versions after 2.3.2
-     npm install vimeo # for the old versions
+     npm install @vimeo/vimeo
 
 ## Advanced examples
 To see examples of the most common use cases of the Node.js library, visit our [Node.js Examples Library](https://developer.vimeo.com/api/libraries/examples/nodejs).
