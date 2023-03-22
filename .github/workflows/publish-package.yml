@@ -1,11 +1,8 @@
 name: Publish Package
 
 on:
-  push:
-    branches:
-      - 'master'
-    tags:
-      - '*.*.*'
+  release:
+    types: [published]
 
 jobs:
   publish:
@@ -18,6 +15,6 @@ jobs:
           # Setup .npmrc file to publish to npm
           registry-url: 'https://registry.npmjs.org'
       - run: npm i
-      - run: npm publish --access public
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_VIMEO_PUBLISH_TOKEN }}
