@@ -13,9 +13,7 @@ jobs:
           # Setup .npmrc file to publish to npm
           registry-url: 'https://registry.npmjs.org'
       - run: npm i
-      - run: cat .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_VIMEO_PUBLISH_TOKEN }}
       - run: npm ping
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_VIMEO_PUBLISH_TOKEN }}
+      - run: npm config list
