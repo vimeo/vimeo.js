@@ -1,6 +1,6 @@
 {
   "name": "@vimeo/vimeo",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "license": "Apache-2.0",
   "description": "A Node.js library for the new Vimeo API.",
   "homepage": "https://developer.vimeo.com/",
