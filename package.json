@@ -22,7 +22,7 @@
     "vimeo"
   ],
   "dependencies": {
-    "tus-js-client": "^1.5.1"
+    "tus-js-client": "^2.3.2"
   },
   "devDependencies": {
     "chai": "^4.x.x",
