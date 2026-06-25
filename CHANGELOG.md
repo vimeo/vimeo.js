@@ -15,12 +15,12 @@
 
 ## [2.3.0] - 2023-01-19
 ## Added
-- Allows the body value included in the request options to be used as the request body, if the content type is not application/x-www-form-urlencoded nor application/json ([#163](https://github.com/vimeo/vimeo.js/pull/163))
-- Adds an example for text track upload ([#163](https://github.com/vimeo/vimeo.js/pull/163))
+- Allows the body value included in the request options to be used as the request body, if the content type is not application/x-www-form-urlencoded nor application/json. ([#163](https://github.com/vimeo/vimeo.js/pull/163))
+- Adds an example for text track upload. ([#163](https://github.com/vimeo/vimeo.js/pull/163))
 
 ## [2.2.0] - 2022-07-21
 ## Fixed
-- Fixes an issue where the error is not passed to one of the callbacks ([#155](https://github.com/vimeo/vimeo.js/pull/155))
+- Fixes an issue where the error is not passed to one of the callbacks. ([#155](https://github.com/vimeo/vimeo.js/pull/155))
 
 ## [2.1.1] - 2018-11-09
 ## Added
